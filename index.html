@@ -107,6 +107,11 @@ textarea{min-height:90px;resize:vertical}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:.9rem;transition:.3s;z-index:99;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 /* oral */
+.mode{display:block;width:100%;text-align:center;cursor:pointer;font:inherit;color:inherit;transition:.15s}
+.mode:hover{border-color:var(--terra);transform:translateY(-2px)}
+.mode-ic{font-size:2.6rem;margin-bottom:6px}
+.mode-row{width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.mode-row:hover{border-color:var(--terra)}
 .oral-card{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:#fff}
 .oral-card .lv{font-size:.75rem;font-weight:700;color:#fff;background:var(--indigo);border-radius:6px;padding:2px 7px;margin-right:6px}
 .oral-card .role{font-size:.85rem;color:var(--muted);margin:6px 0 10px}
@@ -134,7 +139,7 @@ textarea{min-height:90px;resize:vertical}
 </head>
 <body>
 <div class="wrap">
- <div class="top"><div class="brand">Mi mapa del español · <b>EspañolPro</b></div><div class="sec-label" id="secLabel"></div></div>
+ <div class="top"><div class="brand" id="home" title="На главную" style="cursor:pointer">Mi mapa del español · <b>EspañolPro</b></div><div class="sec-label" id="secLabel"></div></div>
  <div class="bar" id="bar"><i></i></div>
  <main id="app"></main>
 </div>
@@ -302,7 +307,7 @@ const ORAL_RATE=['0 · не справился(лась)','1 · с большо�
 const ORAL_CRIT=[['flu','Беглость'],['acc','Грамматическая точность'],['voc','Словарный запас'],['pron','Произношение'],['comp','Понимание собеседника']];
 
 /* ================== СОСТОЯНИЕ ================== */
-const fresh=()=>({v:1,screen:'intro',page:0,answers:{},self:{},test:{stage:0,idx:0,res:{},order:{},plays:{},stageShown:{}},writing:{text:'',paste:0},times:{},sent:false,oral:{rates:{},notes:{},crit:{},comment:'',name:''}});
+const fresh=()=>({v:1,screen:'home',page:0,answers:{},self:{},test:{stage:0,idx:0,res:{},order:{},plays:{},stageShown:{}},writing:{text:'',paste:0},times:{},sent:false,oral:{rates:{},notes:{},crit:{},comment:'',name:''}});
 let S=fresh();
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}}
 function loadSaved(){try{const v=localStorage.getItem(LS_KEY);return v?JSON.parse(v):null}catch(e){return null}}
@@ -316,17 +321,20 @@ function stamp(k){if(!S.times[k])S.times[k]=Date.now()}
 function shuffle(n){const a=[...Array(n).keys()];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 function setProgress(p,label){$('#bar>i').style.width=Math.round(p*100)+'%';$('#secLabel').textContent=label||''}
-function go(screen){S.screen=screen;save();render();window.scrollTo({top:0,behavior:'smooth'})}
+const FLOW=['portrait','self','test','stageDone','writing','results'];
+function go(screen){if(FLOW.includes(S.screen)&&!FLOW.includes(screen))S.resume=S.screen;if(FLOW.includes(screen))S.resume=screen;S.screen=screen;save();render();window.scrollTo({top:0,behavior:'smooth'})}
+function resumePoint(sv){if(!sv)return null;const r=FLOW.includes(sv.screen)?sv.screen:sv.resume;return FLOW.includes(r)?r:null}
+function withSaved(){const sv=loadSaved();if(sv)S=Object.assign(fresh(),sv)}
 
 /* ================== РЕНДЕР ================== */
 function render(){
- ({intro:rIntro,portrait:rPortrait,self:rSelf,test:rTest,stageDone:rStageDone,writing:rWriting,results:rResults,oral:rOral}[S.screen]||rIntro)();
+ ({home:rHome,teacher:rTeacher,intro:rIntro,portrait:rPortrait,self:rSelf,test:rTest,stageDone:rStageDone,writing:rWriting,results:rResults,oral:rOral}[S.screen]||rHome)();
 }
 
 function rIntro(){
  setProgress(0,'');
  const saved=loadSaved();
- const canResume=saved&&saved.screen&&saved.screen!=='intro'&&saved.screen!=='oral';
+ const rp=resumePoint(saved),canResume=!!rp;
  app.innerHTML=`<div class="card">
   <div class="kicker">Диагностика · ~30 минут</div>
   <h1>Mi mapa del español</h1>
@@ -339,15 +347,50 @@ function rIntro(){
   <div class="note blue">💡 Если не знаете ответ, нажимайте <b>«Не знаю»</b>, не угадывайте. И, пожалуйста, без переводчиков и словарей: так программа получится точнее.</div>
   <p class="small muted">Прогресс сохраняется в этом браузере: можно прерваться и вернуться позже.</p>
   <div class="nav">
-   ${canResume?`<button class="btn ghost" id="restart">Начать заново</button><button class="btn" id="resume">Продолжить с места остановки →</button>`:`<span></span><button class="btn" id="start">Начать →</button>`}
+   ${canResume?`<button class="btn ghost" id="restart">Начать заново</button><button class="btn" id="resume">${rp==='results'?'Мои результаты →':'Продолжить с места остановки →'}</button>`:`<button class="btn ghost" id="back">← На главную</button><button class="btn" id="start">Начать →</button>`}
   </div>
  </div>
- <div style="text-align:center"><button class="linkbtn" id="toOral">Режим преподавателя: устная часть</button></div>`;
+ ${canResume?'<div style="text-align:center"><button class="linkbtn" id="back">← На главную</button></div>':''}`;
  if(canResume){
-  $('#resume').onclick=()=>{S=Object.assign(fresh(),saved);render()};
+  $('#resume').onclick=()=>{S=Object.assign(fresh(),saved);go(rp)};
   $('#restart').onclick=()=>{if(confirm('Начать заново? Все ответы будут удалены.')){S=fresh();stamp('start');go('portrait')}};
  }else $('#start').onclick=()=>{S=fresh();stamp('start');go('portrait')};
- $('#toOral').onclick=()=>{if(canResume)S=Object.assign(fresh(),saved);go('oral')};
+ $('#back').onclick=()=>{S.screen='home';render()};
+}
+
+function rHome(){
+ setProgress(0,'');
+ app.innerHTML=`<div class="card hero" style="padding-bottom:20px"><div class="kicker">EspañolPro</div><h1>Mi mapa del español</h1><p class="muted">Кто вы?</p></div>
+ <div class="two">
+  <button class="card mode" id="mStudent"><div class="mode-ic">🎒</div><h2>Я ученик</h2><p class="muted small">Пройти диагностику: рассказать о себе и проверить уровень. ~30 минут</p><span class="btn sm">Начать →</span></button>
+  <button class="card mode" id="mTeacher"><div class="mode-ic">🎤</div><h2>Я преподаватель</h2><p class="muted small">Устная часть на уроке, результаты и отчёт последнего прохождения</p><span class="btn indigo sm">Открыть →</span></button>
+ </div>`;
+ $('#mStudent').onclick=()=>{S.screen='intro';render()};
+ $('#mTeacher').onclick=()=>{withSaved();go('teacher')};
+}
+function rTeacher(){
+ setProgress(0,'Режим преподавателя');
+ const rp=resumePoint(S),done=!!S.times.end,name=(S.answers.name||'').trim();
+ let status;
+ if(done){const A=analyze();status=`<div class="note green">На этом устройстве есть результаты: <b>${esc(name||'без имени')}</b>, уровень по тесту <b>${A.level}</b>.</div>`}
+ else if(rp)status=`<div class="note">${esc(name||'Ученик')} проходит тест прямо сейчас, тест ещё не завершён.</div>`;
+ else status='<div class="note blue">На этом устройстве пока нет пройденных тестов. Устную часть можно провести и отдельно.</div>';
+ app.innerHTML=`<div class="card"><div class="kicker">Режим преподавателя</div><h2>Что делаем?</h2>${status}
+  <div class="steps">
+   <button class="step mode-row" id="tOral"><div class="n">🎤</div><div><b>Устная часть</b><br><span class="muted small">Карточки-ситуации, оценки, отправка в Telegram</span></div></button>
+   ${done?`<button class="step mode-row" id="tRes"><div class="n">📊</div><div><b>Результаты ученика</b><br><span class="muted small">Страница, которую видел ученик</span></div></button>
+   <button class="step mode-row" id="tCopy"><div class="n">📋</div><div><b>Скопировать полный отчёт</b><br><span class="muted small">Чтобы отправить Claude для составления программы</span></div></button>
+   <button class="step mode-row" id="tSend"><div class="n">✈️</div><div><b>Отправить отчёт в Telegram ещё раз</b><br><span class="muted small" id="tStatus">@profeuli_bot</span></div></button>`:''}
+   ${rp&&!done?`<button class="step mode-row" id="tCont"><div class="n">▶</div><div><b>Вернуться к тесту ученика</b><br><span class="muted small">С места остановки</span></div></button>`:''}
+   <button class="step mode-row" id="tNew"><div class="n">✨</div><div><b>Новый ученик</b><br><span class="muted small">Очистить ответы на этом устройстве</span></div></button>
+  </div></div>
+  <div class="nav"><button class="btn ghost" id="back">← На главную</button><span></span></div>`;
+ $('#tOral').onclick=()=>go('oral');
+ if(done){$('#tRes').onclick=()=>go('results');$('#tCopy').onclick=()=>copyText(buildReport());
+  $('#tSend').onclick=async()=>{$('#tStatus').textContent='Отправляю…';try{await tgSend(buildReport());$('#tStatus').textContent='✓ Отправлено'}catch(e){$('#tStatus').textContent='Не удалось отправить, скопируйте отчёт'}}}
+ if($('#tCont'))$('#tCont').onclick=()=>go(rp);
+ $('#tNew').onclick=()=>{if(confirm('Удалить ответы текущего ученика с этого устройства?')){S=fresh();S.screen='teacher';save();render();toast('Готово: можно начинать с новым учеником')}};
+ $('#back').onclick=()=>{S.screen='home';save();render()};
 }
 
 /* ---------- Портрет ---------- */
@@ -614,7 +657,7 @@ function rResults(){
  $('#copy').onclick=()=>copyText(buildReport(A));
  $('#dl').onclick=()=>download(buildReport(A),`diagnostico_${(name||'alumno').replace(/\s+/g,'_')}.txt`);
  $('#toOral').onclick=()=>go('oral');
- $('#new').onclick=()=>{if(confirm('Очистить ответы и начать тест для нового ученика?')){S=fresh();save();go('intro')}};
+ $('#new').onclick=()=>{if(confirm('Очистить ответы и начать тест для нового ученика?')){S=fresh();save();go('home')}};
  if(!S.sent)sendReport(false);else $('#sendStatus').innerHTML='<span style="color:var(--ok)">✓ Результаты отправлены преподавателю</span>';
 }
 
@@ -746,14 +789,14 @@ function rOral(){
   <div class="q"><div class="q-title">Общий комментарий</div><textarea id="oCom" placeholder="Впечатление, произношение, что важно учесть в программе">${esc(o.comment||'')}</textarea></div>
   <div class="send-status" id="oStatus"></div>
  </div>
- <div class="nav"><button class="btn ghost" id="back">← ${hasTest?'К результатам':'На главную'}</button><button class="btn indigo" id="send">${hasTest?'Отправить полный отчёт':'Отправить устную часть'} в Telegram</button></div>`;
+ <div class="nav"><button class="btn ghost" id="back">← Режим преподавателя</button><button class="btn indigo" id="send">${hasTest?'Отправить полный отчёт':'Отправить устную часть'} в Telegram</button></div>`;
  $('#oName').oninput=e=>{o.name=e.target.value;save()};
  $('#oCom').oninput=e=>{o.comment=e.target.value;save()};
  app.querySelectorAll('[data-on]').forEach(el=>el.oninput=()=>{o.notes[el.dataset.on]=el.value;save()});
  app.querySelectorAll('[data-or]').forEach(el=>el.onclick=()=>{const i=el.dataset.or,v=+el.dataset.v;o.rates[i]=o.rates[i]===v?null:v;if(o.rates[i]==null)delete o.rates[i];save();app.querySelectorAll(`[data-or="${i}"]`).forEach(d=>d.classList.toggle('sel',+d.dataset.v===o.rates[i]))});
  app.querySelectorAll('[data-cr]').forEach(el=>el.onclick=()=>{o.crit[el.dataset.cr]=+el.dataset.v;save();app.querySelectorAll(`[data-cr="${el.dataset.cr}"]`).forEach(d=>d.classList.toggle('sel',d===el))});
  app.querySelectorAll('[data-show]').forEach(el=>el.onclick=()=>{const c=ORAL[+el.dataset.show];const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="kicker" style="color:#F3D9CC">${c.lvl} · Situación</div><h2>${esc(c.t)}</h2><p>${esc(c.task)}</p><button class="btn">Закрыть</button>`;ov.querySelector('button').onclick=()=>ov.remove();document.body.appendChild(ov)});
- $('#back').onclick=()=>go(hasTest?'results':'intro');
+ $('#back').onclick=()=>go('teacher');
  $('#send').onclick=async()=>{
   const box=$('#oStatus');box.textContent='Отправляю…';
   let text;
@@ -764,9 +807,10 @@ function rOral(){
 }
 
 /* ================== СТАРТ ================== */
+document.getElementById('home').onclick=()=>{try{speechSynthesis.cancel()}catch(e){}if(S.screen==='home')return;if(FLOW.includes(S.screen)){S.resume=S.screen;save()}S.screen='home';render();window.scrollTo(0,0)};
 (function init(){
  const saved=loadSaved();
- if(/[?&]teacher/.test(location.search)){if(saved)S=Object.assign(fresh(),saved);S.screen='oral';render();return}
+ if(/[?&]teacher/.test(location.search)){withSaved();S.screen='teacher';render();return}
  render();
 })();
 </script>
