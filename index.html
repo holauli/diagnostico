@@ -8,139 +8,240 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,700;1,500&family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--terra:#C65D3B;--terra-d:#A84A2C;--terra-l:#F3D9CC;--indigo:#2E3A6E;--indigo-l:#DDE1F0;--cream:#FBF5EC;--card:#FFFDF9;--ink:#2B2620;--muted:#7A6F63;--line:#E8DDCD;--ok:#2F8F5B;--ok-l:#D8F0E2;--bad:#C0392B;--bad-l:#F8DAD5;--warn:#B7791F;--warn-l:#FCEFD6}
+:root{--bg:#F6F3EE;--surface:#fff;--ink:#1E2340;--text:#34384E;--muted:#6E7185;--line:#E4DFD5;--line-2:#EFEBE4;
+--indigo:#2E3A6E;--indigo-600:#232C56;--indigo-50:#EEF0F7;--terra:#C65D3B;--terra-600:#A94D2F;--terra-50:#FBEEE8;
+--ok:#2F7D55;--ok-50:#E6F3EC;--bad:#B63A2B;--bad-50:#F9E5E1;--warn:#9A6514;--warn-50:#FBF2DF;
+--r-lg:18px;--r-md:12px;--r-sm:8px;--shadow:0 1px 2px rgba(30,35,64,.05),0 10px 30px -12px rgba(30,35,64,.12)}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:Poppins,system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55}
-h1,h2,h3{font-family:Lora,Georgia,serif;color:var(--indigo);line-height:1.25;margin:0 0 .45em;font-weight:700}
-h1{font-size:2rem}h2{font-size:1.45rem}h3{font-size:1.1rem}
-p{margin:0 0 .8em}
-.wrap{max-width:760px;margin:0 auto;padding:18px 16px 90px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;min-height:28px}
-.brand{font-family:Lora;font-style:italic;color:var(--terra);font-size:1.05rem}
-.brand b{color:var(--indigo);font-style:normal}
-.sec-label{font-size:.8rem;color:var(--muted);text-align:right}
-.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:20px}
-.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--terra),#E39A6C);width:0;transition:width .45s}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(46,58,110,.05);margin-bottom:16px}
-.kicker{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:600;margin-bottom:6px}
-.muted{color:var(--muted)}.small{font-size:.85rem}
-.q{margin:0 0 24px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Poppins,system-ui,-apple-system,sans-serif;font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Lora,Georgia,serif;color:var(--ink);line-height:1.2;margin:0 0 .5em;font-weight:700;letter-spacing:-.005em}
+h1{font-size:2.3rem}h2{font-size:1.5rem}h3{font-size:1.12rem}
+p{margin:0 0 .85em}
+b,strong{color:var(--ink);font-weight:600}
+svg.i{width:20px;height:20px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+:focus-visible{outline:2.5px solid var(--indigo);outline-offset:2px;border-radius:6px}
+/* header */
+.site-head{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.site-head .in{max-width:820px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+.brand .mark{width:34px;height:34px;border-radius:10px;background:var(--terra);color:#fff;display:flex;align-items:center;justify-content:center}
+.brand .mark svg.i{width:19px;height:19px;stroke-width:2}
+.brand .wm{font-family:Lora;font-weight:700;color:var(--indigo);font-size:1.12rem;line-height:1.1}
+.brand .sub{display:block;font-family:Poppins;font-weight:400;font-size:.76rem;color:var(--muted);letter-spacing:0}
+.sec-label{font-size:.82rem;color:var(--muted);text-align:right}
+.wrap{max-width:820px;margin:0 auto;padding:26px 20px 90px}
+/* route */
+.route{position:relative;margin:4px 6px 30px;height:46px}
+.route[hidden]{display:none}
+.route .track,.route .fill{position:absolute;left:0;top:8px;height:3px;border-radius:3px}
+.route .track{right:0;background:var(--line)}
+.route .fill{background:var(--terra);transition:width .5s ease}
+.route .stn{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.78rem;color:var(--muted);white-space:nowrap}
+.route .stn:first-of-type{transform:none;align-items:flex-start}
+.route .stn:last-of-type{transform:translateX(-100%);align-items:flex-end}
+.route .stn i{width:19px;height:19px;border-radius:50%;background:var(--surface);border:3px solid var(--line);display:block}
+.route .stn.done i{background:var(--terra);border-color:var(--terra)}
+.route .stn.cur i{border-color:var(--terra);box-shadow:0 0 0 4px var(--terra-50)}
+.route .stn.cur{color:var(--ink);font-weight:600}
+/* panels */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;box-shadow:var(--shadow);margin-bottom:18px}
+.label{font-size:.84rem;color:var(--muted);font-weight:500;margin-bottom:6px;display:block}
+.lead{font-size:1.06rem;color:var(--text);max-width:60ch}
+.muted{color:var(--muted)}.small{font-size:.86rem}
+.page-head{margin-bottom:22px}
+.page-head p{color:var(--muted);margin:0}
+/* questions */
+.q{margin:0 0 28px}
 .q:last-child{margin-bottom:4px}
-.q-title{font-weight:600;margin-bottom:4px}
-.q-hint{color:var(--muted);font-size:.84rem;margin-bottom:8px}
+.q-title{font-weight:600;color:var(--ink);margin-bottom:4px}
+.q-hint{color:var(--muted);font-size:.85rem;margin-bottom:10px}
 .q.err .q-title{color:var(--bad)}
-.q.err .opts,.q.err input,.q.err .bip{outline:2px dashed var(--bad-l);outline-offset:4px;border-radius:12px}
-.opt-tag{font-size:.72rem;color:var(--muted);font-weight:400;margin-left:6px}
-.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.q.err .opts,.q.err input,.q.err .bip,.q.err .scale10{outline:2px solid var(--bad-50);outline-offset:6px;border-radius:var(--r-md)}
+.opt-tag{font-size:.74rem;color:var(--muted);font-weight:400;margin-left:8px;background:var(--line-2);border-radius:99px;padding:1px 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .opts.col{flex-direction:column}
-.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 14px;cursor:pointer;font:inherit;font-size:.93rem;color:var(--ink);text-align:left;transition:.15s;line-height:1.35}
-.opt:hover{border-color:#D9B9A6}
-.opt.sel{border-color:var(--terra);background:var(--terra-l)}
-.opts.col .opt{padding:13px 16px;font-size:1rem}
-input[type=text],textarea{width:100%;font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff;color:var(--ink)}
-input[type=text]:focus,textarea:focus{outline:none;border-color:var(--indigo)}
-textarea{min-height:90px;resize:vertical}
-.bip{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:8px 0 14px}
-.bip .l{font-size:.86rem;text-align:right}.bip .r{font-size:.86rem}
-.dots{display:flex;gap:6px}
-.dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:#fff;cursor:pointer;padding:0}
-.dot.sel{background:var(--indigo);border-color:var(--indigo)}
-.dot:nth-child(3){width:24px;height:24px;margin-top:3px}
-.scale10{display:flex;gap:5px;flex-wrap:wrap}
-.scale10 .opt{width:42px;text-align:center;padding:9px 0}
-.nav{display:flex;justify-content:space-between;gap:10px;margin-top:8px;flex-wrap:wrap}
-.btn{border:0;border-radius:12px;padding:13px 22px;font:inherit;font-weight:600;cursor:pointer;background:var(--terra);color:#fff;transition:.15s}
-.btn:hover{background:var(--terra-d)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn.ghost{background:transparent;color:var(--indigo);border:1.5px solid var(--indigo-l)}
-.btn.ghost:hover{background:var(--indigo-l)}
-.btn.indigo{background:var(--indigo)}.btn.indigo:hover{background:#222c57}
-.btn.sm{padding:8px 14px;font-size:.88rem}
-.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:.85rem;padding:4px}
-.steps{display:grid;gap:10px;margin:16px 0}
-.step{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
-.step .n{flex:0 0 32px;height:32px;border-radius:50%;background:var(--terra-l);color:var(--terra);font-weight:700;display:flex;align-items:center;justify-content:center;font-family:Lora}
-.note{background:var(--warn-l);border-radius:12px;padding:12px 14px;font-size:.9rem;margin:12px 0}
-.note.blue{background:var(--indigo-l)}
-.note.green{background:var(--ok-l)}
+.opt{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-md);padding:9px 15px;cursor:pointer;font:inherit;font-size:.92rem;color:var(--text);text-align:left;transition:border-color .15s,background .15s;line-height:1.4}
+.opt:hover{border-color:#B9BDD3}
+.opt.sel{border-color:var(--indigo);background:var(--indigo-50);color:var(--ink);box-shadow:inset 0 0 0 1px var(--indigo)}
+.opts.col .opt{padding:14px 16px;font-size:1rem;display:flex;align-items:center;gap:14px}
+.key{flex:0 0 28px;height:28px;border-radius:7px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;color:var(--muted);background:var(--bg)}
+.opt.sel .key{background:var(--indigo);border-color:var(--indigo);color:#fff}
+input[type=text],textarea{width:100%;font:inherit;border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;background:var(--surface);color:var(--ink);transition:border-color .15s}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px var(--indigo-50)}
+textarea{min-height:96px;resize:vertical}
+.bip{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.bip .l{font-size:.88rem;text-align:right}.bip .r{font-size:.88rem}
+.dots{display:flex;gap:8px;align-items:center}
+.dot{width:26px;height:26px;border-radius:50%;border:1.5px solid #C9CCDB;background:var(--surface);cursor:pointer;padding:0;transition:.15s}
+.dot:hover{border-color:var(--indigo)}
+.dot.sel{background:var(--indigo);border-color:var(--indigo);box-shadow:0 0 0 4px var(--indigo-50)}
+.dot:nth-child(3){width:18px;height:18px}
+.scale10{display:flex;gap:6px;flex-wrap:wrap}
+.scale10 .opt{width:44px;text-align:center;padding:9px 0}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r-md);padding:13px 24px;font:inherit;font-weight:600;font-size:.95rem;cursor:pointer;background:var(--terra);color:#fff;transition:background .15s}
+.btn:hover{background:var(--terra-600)}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--line-2)}
+.btn.indigo{background:var(--indigo)}.btn.indigo:hover{background:var(--indigo-600)}
+.btn.sm{padding:9px 16px;font-size:.88rem}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:inherit;font-size:.86rem;padding:6px}
+.linkbtn:hover{color:var(--ink)}
+.note{display:flex;gap:12px;align-items:flex-start;background:var(--warn-50);border-radius:var(--r-md);padding:14px 16px;font-size:.92rem;margin:14px 0;color:var(--text)}
+.note svg.i{margin-top:1px}
+.note.blue{background:var(--indigo-50)}.note.blue svg.i{color:var(--indigo)}
+.note.green{background:var(--ok-50)}.note.green svg.i{color:var(--ok)}
+/* home */
+.home-hero{padding:18px 0 26px}
+.home-hero h1{font-size:2.7rem;max-width:16ch;margin-bottom:.35em}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:34px}
+.role{display:flex;align-items:center;gap:16px;text-align:left;cursor:pointer;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow);transition:border-color .15s}
+.role:hover{border-color:var(--indigo)}
+.role-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex:0 0 48px}
+.role-ic svg.i{width:24px;height:24px}
+.role.st .role-ic{background:var(--terra-50);color:var(--terra)}
+.role.te .role-ic{background:var(--indigo-50);color:var(--indigo)}
+.role-body{flex:1}
+.role-t{display:block;font-family:Lora;font-weight:700;font-size:1.2rem;color:var(--ink)}
+.role-d{display:block;font-size:.86rem;color:var(--muted);margin-top:2px}
+.chev{color:var(--muted)}
+.how h2{font-size:1.15rem;margin-bottom:14px}
+.how-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s;border-top:1px solid var(--line)}
+.how-list li{counter-increment:s;padding:16px 16px 0 0;font-size:.86rem;color:var(--muted)}
+.how-list li::before{content:counter(s);display:block;font-family:Lora;font-weight:700;color:var(--terra);font-size:1.3rem;margin-bottom:4px}
+.how-list b{display:block;color:var(--ink);font-size:.95rem;margin-bottom:2px}
+/* steps (intro) */
+.steps{display:grid;gap:0;margin:18px 0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--line)}
+.step:last-child{border-bottom:0}
+.step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--terra-50);color:var(--terra);font-weight:700;display:flex;align-items:center;justify-content:center;font-family:Lora}
+.step .t{display:block;font-weight:600;color:var(--ink)}
+.step .d{display:block;font-size:.86rem;color:var(--muted)}
+.step .dur{margin-left:auto;font-size:.82rem;color:var(--muted);white-space:nowrap;padding-top:4px}
+/* actions (teacher) */
+.actions{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;margin:16px 0 4px}
+.action{display:flex;gap:14px;align-items:center;width:100%;background:var(--surface);border:0;border-bottom:1px solid var(--line);padding:15px 16px;text-align:left;cursor:pointer;font:inherit;color:inherit;transition:background .15s}
+.action:last-child{border-bottom:0}
+.action:hover{background:var(--bg)}
+.action .ai{width:38px;height:38px;border-radius:10px;background:var(--indigo-50);color:var(--indigo);display:flex;align-items:center;justify-content:center;flex:0 0 38px}
+.action.danger .ai{background:var(--terra-50);color:var(--terra)}
+.action .t{display:block;font-weight:600;color:var(--ink)}
+.action .d{display:block;font-size:.84rem;color:var(--muted)}
+.action .chev{margin-left:auto}
 /* self assessment */
-.sa-group{margin-bottom:22px}
-.sa-group h3{display:flex;align-items:center;gap:8px}
-.sa-item{border-top:1px solid var(--line);padding:12px 0}
-.sa-item p{margin:0 0 8px;font-size:.94rem}
+.sa-group{margin-bottom:26px}
+.sa-group h3{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sa-group h3 .gi{width:32px;height:32px;border-radius:9px;background:var(--indigo-50);color:var(--indigo);display:flex;align-items:center;justify-content:center}
+.sa-group h3 .gi svg.i{width:18px;height:18px}
+.sa-item{border-top:1px solid var(--line-2);padding:14px 0}
+.sa-item p{margin:0 0 10px;font-size:.94rem}
+.sa-item.err{background:var(--bad-50);border-radius:var(--r-sm);padding:14px 10px}
 .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.seg .opt{text-align:center;padding:8px 4px;font-size:.82rem}
+.seg .opt{text-align:center;padding:8px 4px;font-size:.83rem}
 /* test */
-.passage{background:#fff;border:1px solid var(--line);border-left:4px solid var(--indigo);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-family:Lora;font-size:1.02rem}
-.passage .pt{font-family:Poppins;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.audio{display:flex;align-items:center;gap:12px;background:var(--indigo-l);border-radius:12px;padding:12px 14px;margin-bottom:16px;flex-wrap:wrap}
-.play{width:52px;height:52px;border-radius:50%;border:0;background:var(--indigo);color:#fff;font-size:1.3rem;cursor:pointer;flex:0 0 52px}
+.skill-tag{display:inline-flex;align-items:center;gap:7px;font-size:.84rem;font-weight:500;color:var(--indigo);background:var(--indigo-50);border-radius:99px;padding:4px 12px 4px 9px;margin-bottom:16px}
+.skill-tag svg.i{width:16px;height:16px}
+.passage{background:#FBFAF7;border:1px solid var(--line);border-radius:var(--r-md);padding:18px 20px;margin-bottom:20px;font-family:Lora;font-size:1.04rem;line-height:1.7;color:var(--ink)}
+.passage .pt{font-family:Poppins;font-size:.8rem;color:var(--muted);margin-bottom:8px;font-weight:500}
+.audio{display:flex;align-items:center;gap:16px;background:var(--indigo-50);border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;flex-wrap:wrap}
+.play{width:52px;height:52px;border-radius:50%;border:0;background:var(--indigo);color:#fff;cursor:pointer;flex:0 0 52px;display:flex;align-items:center;justify-content:center}
+.play svg.i{width:20px;height:20px;fill:#fff;stroke:none;margin-left:3px}
 .play:disabled{opacity:.35;cursor:not-allowed}
-.test-q{font-family:Lora;font-size:1.3rem;color:var(--indigo);margin:4px 0 14px}
-.test-ins{font-size:.88rem;color:var(--muted)}
-.nose{margin-top:10px}
-.nose .opt{border-style:dashed;color:var(--muted)}
-.nose .opt.sel{color:var(--ink);background:var(--warn-l);border-color:var(--warn)}
-.counter{font-size:.82rem;color:var(--muted);margin-top:6px}
+.play.on{background:var(--terra)}
+.test-q{font-family:Lora;font-size:1.4rem;color:var(--ink);margin:2px 0 18px;line-height:1.35}
+.test-ins{font-size:.9rem;color:var(--muted);margin-bottom:4px}
+.nose{margin-top:12px}
+.nose .opt{border-style:dashed;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
+.nose .opt svg.i{width:17px;height:17px}
+.nose .opt.sel{color:var(--ink);background:var(--warn-50);border-color:var(--warn);box-shadow:none}
+.kbd-hint{font-size:.78rem;color:var(--muted)}
+.counter{font-size:.84rem;color:var(--muted);margin-top:8px}
+.center{text-align:center}
+.badge-ic{width:60px;height:60px;border-radius:50%;background:var(--terra-50);color:var(--terra);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.badge-ic svg.i{width:28px;height:28px}
 /* results */
-.hero{text-align:center;padding:30px 20px}
-.level-badge{display:inline-block;font-family:Lora;font-size:2.6rem;font-weight:700;color:#fff;background:var(--terra);border-radius:20px;padding:8px 26px;margin:10px 0 6px}
+.res-head{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center}
+.res-level{font-family:Lora;font-weight:700;font-size:3.6rem;line-height:1;color:var(--indigo);letter-spacing:-.02em}
+.res-level small{display:block;font-family:Poppins;font-weight:400;font-size:.8rem;color:var(--muted);letter-spacing:0;margin-top:8px}
+.lvl-track{position:relative;margin:36px 4px 8px;height:46px}
+.lvl-track .track{position:absolute;left:0;right:0;top:9px;height:4px;background:var(--line);border-radius:4px}
+.lvl-track .fill{position:absolute;left:0;top:9px;height:4px;background:var(--terra);border-radius:4px}
+.lvl-track .tick{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.8rem;color:var(--muted);font-weight:500}
+.lvl-track .tick i{width:22px;height:22px;border-radius:50%;background:var(--surface);border:3px solid var(--line);display:block}
+.lvl-track .tick.on i{border-color:var(--terra);background:var(--terra)}
+.lvl-track .pin{position:absolute;top:-30px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:6px;white-space:nowrap}
+.lvl-track .pin::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;background:var(--ink);transform:translateX(-50%) rotate(45deg)}
 .radar-wrap{display:flex;justify-content:center}
-.legend{display:flex;justify-content:center;gap:18px;font-size:.85rem;margin-top:4px;flex-wrap:wrap}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{display:inline-block;width:18px;height:4px;border-radius:2px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.legend{display:flex;justify-content:center;gap:20px;font-size:.85rem;margin-top:4px;flex-wrap:wrap;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;width:20px;height:3px;border-radius:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.two>.card{margin-bottom:18px}
+.card-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.card-h h3{margin:0}
+.card-h .gi{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.card-h .gi.ok{background:var(--ok-50);color:var(--ok)}.card-h .gi.tr{background:var(--terra-50);color:var(--terra)}
+.card-h .gi svg.i{width:18px;height:18px}
 .list{margin:0;padding:0;list-style:none}
-.list li{padding:8px 0 8px 28px;position:relative;border-bottom:1px dashed var(--line);font-size:.94rem}
+.list li{padding:10px 0;border-bottom:1px solid var(--line-2);font-size:.94rem}
 .list li:last-child{border-bottom:0}
-.list li::before{position:absolute;left:0;top:7px;font-weight:700}
-.list.plus li::before{content:"✓";color:var(--ok)}
-.list.grow li::before{content:"→";color:var(--terra)}
-.skillrow{display:grid;grid-template-columns:120px 1fr 44px;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
-.sbar{height:10px;background:var(--line);border-radius:99px;position:relative;overflow:visible}
-.sbar i{position:absolute;left:0;top:0;height:100%;border-radius:99px;background:var(--terra)}
-.sbar b{position:absolute;top:-4px;width:3px;height:18px;background:var(--indigo);border-radius:2px}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{background:var(--indigo-l);color:var(--indigo);border-radius:99px;padding:4px 11px;font-size:.82rem}
-.send-status{font-size:.88rem;margin-top:8px}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:.9rem;transition:.3s;z-index:99;max-width:90vw;text-align:center}
+.tag{background:var(--indigo-50);color:var(--indigo);border-radius:99px;padding:5px 12px;font-size:.83rem}
+.send-status{font-size:.88rem;margin-top:10px;display:flex;align-items:center;gap:8px}
+.send-status.ok{color:var(--ok)}.send-status.bad{color:var(--bad)}
+.teacher-strip{border:1px dashed var(--line);border-radius:var(--r-lg);padding:20px 22px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:var(--r-md);font-size:.9rem;transition:transform .3s;z-index:99;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 /* oral */
-.mode{display:block;width:100%;text-align:center;cursor:pointer;font:inherit;color:inherit;transition:.15s}
-.mode:hover{border-color:var(--terra);transform:translateY(-2px)}
-.mode-ic{font-size:2.6rem;margin-bottom:6px}
-.mode-row{width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit}
-.mode-row:hover{border-color:var(--terra)}
-.oral-card{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:#fff}
-.oral-card .lv{font-size:.75rem;font-weight:700;color:#fff;background:var(--indigo);border-radius:6px;padding:2px 7px;margin-right:6px}
-.oral-card .role{font-size:.85rem;color:var(--muted);margin:6px 0 10px}
-.rate{display:flex;gap:6px;flex-wrap:wrap}
-.rate .opt{font-size:.8rem;padding:6px 10px}
+.oral-card{border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;margin-bottom:12px;background:var(--surface)}
+.oral-card .lv{font-size:.74rem;font-weight:600;color:var(--indigo);background:var(--indigo-50);border-radius:6px;padding:2px 8px;margin-right:8px}
+.oral-card .role{display:block;box-shadow:none;border:0;padding:0;font-size:.86rem;color:var(--muted);margin:6px 0 12px;cursor:default}
+.rate{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.rate .opt{font-size:.8rem;padding:6px 11px}
 .overlay{position:fixed;inset:0;background:var(--indigo);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;z-index:50;text-align:center}
-.overlay h2{color:#fff;font-size:2.2rem}
-.overlay p{font-size:1.5rem;max-width:900px;font-family:Lora;line-height:1.45}
-.overlay .btn{margin-top:30px}
-@media (max-width:600px){
- h1{font-size:1.6rem}.card{padding:18px}
- .two{grid-template-columns:1fr}
- .bip{grid-template-columns:1fr 1fr;gap:6px 14px}
+.overlay h2{color:#fff;font-size:2.4rem}
+.overlay p{font-size:1.55rem;max-width:900px;font-family:Lora;line-height:1.45}
+.overlay .ol{color:#C9CEE6;font-size:.95rem;margin-bottom:10px}
+.overlay .btn{margin-top:30px;background:#fff;color:var(--indigo)}
+@media (max-width:640px){
+ body{font-size:15px}
+ h1{font-size:1.8rem}.home-hero h1{font-size:2.05rem}
+ .card{padding:20px;border-radius:16px}
+ .wrap{padding:18px 14px 80px}
+ .site-head .in{padding:10px 14px}
+ .brand .sub{display:none}
+ .roles,.two{grid-template-columns:1fr}
+ .how-list{grid-template-columns:1fr 1fr}
+ .route .stn span{display:none}.route .stn.cur span{display:block}
+ .route{height:40px;margin-bottom:22px}
+ .bip{grid-template-columns:1fr 1fr;gap:8px 14px}
  .bip .dots{order:1;grid-column:1/3;justify-content:space-between}
  .bip .l{order:2;text-align:left;font-size:.8rem}.bip .r{order:3;text-align:right;font-size:.8rem}
  .seg .opt{font-size:.74rem}
- .skillrow{grid-template-columns:92px 1fr 40px;font-size:.82rem}
- .test-q{font-size:1.15rem}
+ .test-q{font-size:1.2rem}
+ .res-head{grid-template-columns:1fr;gap:6px}
+ .res-level{font-size:3rem}
+ .step .dur{display:none}
+ .kbd-hint{display:none}
 }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media print{
- body{background:#fff}.nav,.btn,.linkbtn,.top .sec-label,.bar,.noprint{display:none!important}
+ body{background:#fff}.site-head,.route,.nav,.btn,.linkbtn,.noprint{display:none!important}
  .card{box-shadow:none;break-inside:avoid}
 }
 </style>
 </head>
 <body>
+<header class="site-head"><div class="in">
+ <button class="brand" id="home" title="На главную" aria-label="EspañolPro, на главную"><span class="mark" id="markIc"></span><span class="wm">EspañolPro<span class="sub">Mi mapa del español</span></span></button>
+ <div class="sec-label" id="secLabel"></div>
+</div></header>
 <div class="wrap">
- <div class="top"><div class="brand" id="home" title="На главную" style="cursor:pointer">Mi mapa del español · <b>EspañolPro</b></div><div class="sec-label" id="secLabel"></div></div>
- <div class="bar" id="bar"><i></i></div>
+ <nav class="route" id="route" hidden aria-label="Этапы диагностики"><div class="track"></div><div class="fill" id="routeFill"></div>
+  <div class="stn" style="left:0"><i></i><span>Анкета</span></div><div class="stn" style="left:33.33%"><i></i><span>Самооценка</span></div><div class="stn" style="left:66.66%"><i></i><span>Задания</span></div><div class="stn" style="left:100%"><i></i><span>Результат</span></div>
+ </nav>
  <main id="app"></main>
 </div>
 <div class="toast" id="toast"></div>
@@ -208,12 +309,12 @@ const PAGES=[
 /* ================== БЛОК 2: САМООЦЕНКА ================== */
 const SELF_SCALE=['Не могу','С трудом','В целом да','Легко'];
 const SELF=[
- {k:'listen',t:'Понимание на слух',ic:'🎧',items:['Понимаю, когда со мной говорят медленно и чётко о простом: имя, цены, время.','Понимаю объявления на вокзале или в аэропорту и простые диалоги в магазине.','Понимаю основное в разговоре носителей на знакомые темы, если говорят не слишком быстро.']},
- {k:'read',t:'Чтение',ic:'📖',items:['Читаю вывески, меню, простые объявления.','Понимаю короткое письмо или сообщение, например от хозяина квартиры.','Понимаю основную мысль статьи или блога на знакомую тему.']},
- {k:'speak',t:'Говорение',ic:'💬',items:['Могу поздороваться, представиться, заказать еду, купить билет.','Могу объясниться в отеле, спросить дорогу, решить простую проблему.','Могу рассказать о поездке, высказать мнение и поддерживать разговор без долгих пауз.']},
- {k:'write',t:'Письмо',ic:'✍️',items:['Могу написать о себе пару предложений, заполнить анкету.','Могу написать короткое сообщение: забронировать, договориться о встрече.','Могу написать связный текст: отзыв или письмо с рассказом о событиях.']},
- {k:'gram',t:'Грамматика',ic:'🧩',items:['Уверенно пользуюсь настоящим временем, ser/estar, hay.','Различаю прошедшие времена (Indefinido, Perfecto, Imperfecto) и использую ir a + инфинитив.','Использую subjuntivo в простых случаях (espero que…, cuando + будущее) и condicional.']},
- {k:'vocab',t:'Словарный запас',ic:'🗂️',items:['Знаю базовые слова: числа, еда, семья, город.','Знаю слова для путешествий: транспорт, жильё, покупки, здоровье.','Могу описать чувства, мнения, проблемы; в бытовых темах слов почти всегда хватает.']}
+ {k:'listen',t:'Понимание на слух',items:['Понимаю, когда со мной говорят медленно и чётко о простом: имя, цены, время.','Понимаю объявления на вокзале или в аэропорту и простые диалоги в магазине.','Понимаю основное в разговоре носителей на знакомые темы, если говорят не слишком быстро.']},
+ {k:'read',t:'Чтение',items:['Читаю вывески, меню, простые объявления.','Понимаю короткое письмо или сообщение, например от хозяина квартиры.','Понимаю основную мысль статьи или блога на знакомую тему.']},
+ {k:'speak',t:'Говорение',items:['Могу поздороваться, представиться, заказать еду, купить билет.','Могу объясниться в отеле, спросить дорогу, решить простую проблему.','Могу рассказать о поездке, высказать мнение и поддерживать разговор без долгих пауз.']},
+ {k:'write',t:'Письмо',items:['Могу написать о себе пару предложений, заполнить анкету.','Могу написать короткое сообщение: забронировать, договориться о встрече.','Могу написать связный текст: отзыв или письмо с рассказом о событиях.']},
+ {k:'gram',t:'Грамматика',items:['Уверенно пользуюсь настоящим временем, ser/estar, hay.','Различаю прошедшие времена (Indefinido, Perfecto, Imperfecto) и использую ir a + инфинитив.','Использую subjuntivo в простых случаях (espero que…, cuando + будущее) и condicional.']},
+ {k:'vocab',t:'Словарный запас',items:['Знаю базовые слова: числа, еда, семья, город.','Знаю слова для путешествий: транспорт, жильё, покупки, здоровье.','Могу описать чувства, мнения, проблемы; в бытовых темах слов почти всегда хватает.']}
 ];
 
 /* ================== БЛОК 3: ТЕСТ ================== */
@@ -320,7 +421,47 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');cl
 function stamp(k){if(!S.times[k])S.times[k]=Date.now()}
 function shuffle(n){const a=[...Array(n).keys()];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
-function setProgress(p,label){$('#bar>i').style.width=Math.round(p*100)+'%';$('#secLabel').textContent=label||''}
+const IC={
+ pin:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-6.5 8-6.5s8 2.1 8 6.5"/>',
+ board:'<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+ listen:'<path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="3" y="14" width="4.5" height="6" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="6" rx="1.5"/>',
+ read:'<path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11"/>',
+ speak:'<path d="M4 5h16v11H10l-6 4z"/>',
+ sit:'<path d="M4 5h16v11H10l-6 4z"/>',
+ write:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+ gram:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+ vocab:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+ trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+ flag:'<path d="M5 21V4h12l-2.5 4.5L17 13H5"/>',
+ printer:'<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="1.5"/><path d="M7 14h10v7H7z"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',
+ chart:'<path d="M5 20V11M12 20V4M19 20v-6"/>',
+ copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3"/>',
+ send:'<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/>',
+ reset:'<path d="M3 12a9 9 0 109-9"/><path d="M3 4v5h5"/>',
+ play:'<path d="M7 4.5v15l13-7.5z"/>',
+ question:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 014.8.8c0 1.7-2.4 2.1-2.4 3.7M12 17h.01"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ chev:'<path d="M9 6l6 6-6 6"/>',
+ back:'<path d="M15 6l-6 6 6 6"/>',
+ download:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+ resume:'<path d="M5 12a7 7 0 1 0 2-5"/><path d="M5 3v4h4"/>'
+};
+const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]||''}</svg>`;
+const ROUTE_SCREENS={portrait:0,self:1,test:2,stageDone:2,writing:2,results:3};
+function setProgress(p,label){
+ $('#secLabel').textContent=label||'';
+ const r=$('#route'),idx=ROUTE_SCREENS[S.screen];
+ if(idx==null){r.hidden=true;return}
+ r.hidden=false;
+ const bounds=[[0,.36],[.36,.42],[.42,1],[1,1]];
+ const [a,b]=bounds[idx];const frac=b>a?Math.min(1,Math.max(0,(p-a)/(b-a))):0;
+ $('#routeFill').style.width=Math.min(100,(idx+(idx<3?frac:0))/3*100)+'%';
+ r.querySelectorAll('.stn').forEach((el,i)=>{el.classList.toggle('done',i<idx||(idx===3&&i===3));el.classList.toggle('cur',i===idx)});
+}
 const FLOW=['portrait','self','test','stageDone','writing','results'];
 function go(screen){if(FLOW.includes(S.screen)&&!FLOW.includes(screen))S.resume=S.screen;if(FLOW.includes(screen))S.resume=screen;S.screen=screen;save();render();window.scrollTo({top:0,behavior:'smooth'})}
 function resumePoint(sv){if(!sv)return null;const r=FLOW.includes(sv.screen)?sv.screen:sv.resume;return FLOW.includes(r)?r:null}
@@ -336,21 +477,19 @@ function rIntro(){
  const saved=loadSaved();
  const rp=resumePoint(saved),canResume=!!rp;
  app.innerHTML=`<div class="card">
-  <div class="kicker">Диагностика · ~30 минут</div>
-  <h1>Mi mapa del español</h1>
-  <p>Это не экзамен. Мы вместе составим вашу карту испанского: зачем он вам, как вам удобно учиться и что вы уже умеете. По результатам преподаватель соберёт <b>персональную программу</b> именно под вас.</p>
+  <div class="page-head"><h1>Перед началом</h1><p class="lead">Это не экзамен. Вы расскажете, зачем вам испанский и как вам удобно учиться, а затем выполните задания на уровень. По итогам преподаватель составит персональную программу.</p></div>
   <div class="steps">
-   <div class="step"><div class="n">1</div><div><b>Расскажите о себе</b><br><span class="muted small">Цели, ситуации, любимые форматы. ~10 мин</span></div></div>
-   <div class="step"><div class="n">2</div><div><b>Оцените себя</b><br><span class="muted small">Что, по-вашему, вы уже умеете. ~3 мин</span></div></div>
-   <div class="step"><div class="n">3</div><div><b>Проверьте уровень</b><br><span class="muted small">Задания подстраиваются под вас + короткий текст. ~15–20 мин</span></div></div>
+   <div class="step"><div class="n">1</div><div><span class="t">Анкета</span><span class="d">Цели, ситуации, любимые форматы занятий</span></div><span class="dur">10 мин</span></div>
+   <div class="step"><div class="n">2</div><div><span class="t">Самооценка</span><span class="d">Что, по-вашему, вы уже умеете</span></div><span class="dur">3 мин</span></div>
+   <div class="step"><div class="n">3</div><div><span class="t">Задания</span><span class="d">Сложность подстраивается под ваши ответы, в конце короткий текст</span></div><span class="dur">15–20 мин</span></div>
   </div>
-  <div class="note blue">💡 Если не знаете ответ, нажимайте <b>«Не знаю»</b>, не угадывайте. И, пожалуйста, без переводчиков и словарей: так программа получится точнее.</div>
-  <p class="small muted">Прогресс сохраняется в этом браузере: можно прерваться и вернуться позже.</p>
+  <div class="note blue">${ic('info')}<div>Если не знаете ответ, выбирайте «Не знаю», а не угадывайте. Переводчиками и словарями не пользуйтесь: так программа получится точнее.</div></div>
+  <p class="small muted">Ответы сохраняются в этом браузере, можно прерваться и вернуться позже.</p>
   <div class="nav">
-   ${canResume?`<button class="btn ghost" id="restart">Начать заново</button><button class="btn" id="resume">${rp==='results'?'Мои результаты →':'Продолжить с места остановки →'}</button>`:`<button class="btn ghost" id="back">← На главную</button><button class="btn" id="start">Начать →</button>`}
+   ${canResume?`<button class="btn ghost" id="restart">${ic('reset')}Начать заново</button><button class="btn" id="resume">${rp==='results'?'Открыть мои результаты':'Продолжить с места остановки'}</button>`:`<button class="btn ghost" id="back">${ic('back')}На главную</button><button class="btn" id="start">Начать диагностику</button>`}
   </div>
  </div>
- ${canResume?'<div style="text-align:center"><button class="linkbtn" id="back">← На главную</button></div>':''}`;
+ ${canResume?`<div class="center"><button class="linkbtn" id="back">На главную</button></div>`:''}`;
  if(canResume){
   $('#resume').onclick=()=>{S=Object.assign(fresh(),saved);go(rp)};
   $('#restart').onclick=()=>{if(confirm('Начать заново? Все ответы будут удалены.')){S=fresh();stamp('start');go('portrait')}};
@@ -360,11 +499,17 @@ function rIntro(){
 
 function rHome(){
  setProgress(0,'');
- app.innerHTML=`<div class="card hero" style="padding-bottom:20px"><div class="kicker">EspañolPro</div><h1>Mi mapa del español</h1><p class="muted">Кто вы?</p></div>
- <div class="two">
-  <button class="card mode" id="mStudent"><div class="mode-ic">🎒</div><h2>Я ученик</h2><p class="muted small">Пройти диагностику: рассказать о себе и проверить уровень. ~30 минут</p><span class="btn sm">Начать →</span></button>
-  <button class="card mode" id="mTeacher"><div class="mode-ic">🎤</div><h2>Я преподаватель</h2><p class="muted small">Устная часть на уроке, результаты и отчёт последнего прохождения</p><span class="btn indigo sm">Открыть →</span></button>
- </div>`;
+ app.innerHTML=`<section class="home-hero"><h1>Карта вашего испанского</h1><p class="lead">Диагностика EspañolPro показывает, зачем вам язык, как вам удобно учиться и какой у вас уровень сейчас. По её итогам составляется персональная программа.</p></section>
+ <div class="roles">
+  <button class="role st" id="mStudent"><span class="role-ic">${ic('user')}</span><span class="role-body"><span class="role-t">Я ученик</span><span class="role-d">Пройти диагностику, около 30 минут</span></span><span class="chev">${ic('chev')}</span></button>
+  <button class="role te" id="mTeacher"><span class="role-ic">${ic('board')}</span><span class="role-body"><span class="role-t">Я преподаватель</span><span class="role-d">Устная часть, результаты и отчёт</span></span><span class="chev">${ic('chev')}</span></button>
+ </div>
+ <section class="how"><h2>Как проходит диагностика</h2><ol class="how-list">
+  <li><b>Анкета</b>Цели, ситуации и удобный формат занятий</li>
+  <li><b>Самооценка</b>Что, по-вашему, вы уже умеете</li>
+  <li><b>Задания</b>Грамматика, лексика, чтение, аудирование и письмо</li>
+  <li><b>Результат</b>Профиль навыков и следующие шаги</li>
+ </ol></section>`;
  $('#mStudent').onclick=()=>{S.screen='intro';render()};
  $('#mTeacher').onclick=()=>{withSaved();go('teacher')};
 }
@@ -372,24 +517,23 @@ function rTeacher(){
  setProgress(0,'Режим преподавателя');
  const rp=resumePoint(S),done=!!S.times.end,name=(S.answers.name||'').trim();
  let status;
- if(done){const A=analyze();status=`<div class="note green">На этом устройстве есть результаты: <b>${esc(name||'без имени')}</b>, уровень по тесту <b>${A.level}</b>.</div>`}
- else if(rp)status=`<div class="note">${esc(name||'Ученик')} проходит тест прямо сейчас, тест ещё не завершён.</div>`;
- else status='<div class="note blue">На этом устройстве пока нет пройденных тестов. Устную часть можно провести и отдельно.</div>';
- app.innerHTML=`<div class="card"><div class="kicker">Режим преподавателя</div><h2>Что делаем?</h2>${status}
-  <div class="steps">
-   <button class="step mode-row" id="tOral"><div class="n">🎤</div><div><b>Устная часть</b><br><span class="muted small">Карточки-ситуации, оценки, отправка в Telegram</span></div></button>
-   ${done?`<button class="step mode-row" id="tRes"><div class="n">📊</div><div><b>Результаты ученика</b><br><span class="muted small">Страница, которую видел ученик</span></div></button>
-   <button class="step mode-row" id="tCopy"><div class="n">📋</div><div><b>Скопировать полный отчёт</b><br><span class="muted small">Чтобы отправить Claude для составления программы</span></div></button>
-   <button class="step mode-row" id="tSend"><div class="n">✈️</div><div><b>Отправить отчёт в Telegram ещё раз</b><br><span class="muted small" id="tStatus">@profeuli_bot</span></div></button>`:''}
-   ${rp&&!done?`<button class="step mode-row" id="tCont"><div class="n">▶</div><div><b>Вернуться к тесту ученика</b><br><span class="muted small">С места остановки</span></div></button>`:''}
-   <button class="step mode-row" id="tNew"><div class="n">✨</div><div><b>Новый ученик</b><br><span class="muted small">Очистить ответы на этом устройстве</span></div></button>
+ if(done){const A=analyze();status=`<div class="note green">${ic('check')}<div>На этом устройстве есть результаты: <b>${esc(name||'без имени')}</b>, уровень по заданиям <b>${A.level}</b>.</div></div>`}
+ else if(rp)status=`<div class="note">${ic('clock')}<div>${esc(name||'Ученик')} ещё проходит диагностику на этом устройстве.</div></div>`;
+ else status=`<div class="note blue">${ic('info')}<div>На этом устройстве пока нет пройденных диагностик. Устную часть можно провести отдельно.</div></div>`;
+ const row=(id,icn,t,d,cls='')=>`<button class="action ${cls}" id="${id}"><span class="ai">${ic(icn)}</span><span><span class="t">${t}</span><span class="d" ${id==='tSend'?'id="tStatus"':''}>${d}</span></span><span class="chev">${ic('chev')}</span></button>`;
+ app.innerHTML=`<div class="card"><div class="page-head"><h1>Режим преподавателя</h1></div>${status}
+  <div class="actions">
+   ${row('tOral','mic','Устная часть','Карточки-ситуации, оценки, отправка в Telegram')}
+   ${done?row('tRes','chart','Результаты ученика','Страница, которую видел ученик')+row('tCopy','copy','Скопировать полный отчёт','Для составления программы с Claude')+row('tSend','send','Отправить отчёт в Telegram ещё раз','@profeuli_bot'):''}
+   ${rp&&!done?row('tCont','resume','Вернуться к диагностике ученика','С места остановки'):''}
+   ${row('tNew','reset','Новый ученик','Удалить ответы с этого устройства','danger')}
   </div></div>
-  <div class="nav"><button class="btn ghost" id="back">← На главную</button><span></span></div>`;
+  <div class="nav"><button class="btn ghost" id="back">${ic('back')}На главную</button><span></span></div>`;
  $('#tOral').onclick=()=>go('oral');
  if(done){$('#tRes').onclick=()=>go('results');$('#tCopy').onclick=()=>copyText(buildReport());
-  $('#tSend').onclick=async()=>{$('#tStatus').textContent='Отправляю…';try{await tgSend(buildReport());$('#tStatus').textContent='✓ Отправлено'}catch(e){$('#tStatus').textContent='Не удалось отправить, скопируйте отчёт'}}}
+  $('#tSend').onclick=async()=>{$('#tStatus').textContent='Отправка…';try{await tgSend(buildReport());$('#tStatus').textContent='Отправлено'}catch(e){$('#tStatus').textContent='Не отправлено: проверьте интернет или скопируйте отчёт'}}}
  if($('#tCont'))$('#tCont').onclick=()=>go(rp);
- $('#tNew').onclick=()=>{if(confirm('Удалить ответы текущего ученика с этого устройства?')){S=fresh();S.screen='teacher';save();render();toast('Готово: можно начинать с новым учеником')}};
+ $('#tNew').onclick=()=>{if(confirm('Удалить ответы текущего ученика с этого устройства?')){S=fresh();S.screen='teacher';save();render();toast('Ответы удалены. Можно начинать с новым учеником')}};
  $('#back').onclick=()=>{S.screen='home';save();render()};
 }
 
@@ -415,9 +559,9 @@ function qHTML(q){
 function rPortrait(){
  stamp('portrait');
  const page=PAGES[S.page];
- setProgress(.02+.33*(S.page/PAGES.length),`Часть 1 · ${S.page+1} из ${PAGES.length}`);
- app.innerHTML=`<div class="card"><div class="kicker">Расскажите о себе</div><h2>${esc(page.title)}</h2>${page.sub?`<p class="muted small">${esc(page.sub)}</p>`:''}<div style="margin-top:18px">${visibleQs(page).map(qHTML).join('')}</div></div>
- <div class="nav"><button class="btn ghost" id="back">← Назад</button><button class="btn" id="next">Дальше →</button></div>`;
+ setProgress(.33*(S.page/PAGES.length),'Анкета');
+ app.innerHTML=`<div class="card"><div class="page-head"><span class="label">Анкета, шаг ${S.page+1} из ${PAGES.length}</span><h2>${esc(page.title)}</h2>${page.sub?`<p>${esc(page.sub)}</p>`:''}</div><div>${visibleQs(page).map(qHTML).join('')}</div></div>
+ <div class="nav"><button class="btn ghost" id="back">${ic('back')}Назад</button><button class="btn" id="next">Далее</button></div>`;
  bindPortrait(page);
 }
 function bindPortrait(page){
@@ -453,18 +597,18 @@ function bindPortrait(page){
 /* ---------- Самооценка ---------- */
 function rSelf(){
  stamp('self');
- setProgress(.36,'Часть 2 · Самооценка');
- app.innerHTML=`<div class="card"><div class="kicker">Оцените себя</div><h2>Что вы уже умеете?</h2><p class="muted small">Отвечайте по ощущениям, правильных ответов здесь нет. Потом мы сравним самооценку с результатами заданий.</p>
- ${SELF.map(g=>`<div class="sa-group"><h3><span>${g.ic}</span>${esc(g.t)}</h3>${g.items.map((it,i)=>{const id=g.k+i,v=S.self[id];return `<div class="sa-item" id="sa_${id}"><p>${esc(it)}</p><div class="seg">${SELF_SCALE.map((s,j)=>`<button type="button" class="opt ${v===j?'sel':''}" data-sa="${id}" data-v="${j}">${s}</button>`).join('')}</div></div>`}).join('')}</div>`).join('')}
+ setProgress(.36,'Самооценка');
+ app.innerHTML=`<div class="card"><div class="page-head"><h2>Что вы уже умеете?</h2><p>Отвечайте по ощущениям, правильных ответов здесь нет. Потом мы сравним самооценку с результатами заданий.</p></div>
+ ${SELF.map(g=>`<div class="sa-group"><h3><span class="gi">${ic(g.k)}</span>${esc(g.t)}</h3>${g.items.map((it,i)=>{const id=g.k+i,v=S.self[id];return `<div class="sa-item" id="sa_${id}"><p>${esc(it)}</p><div class="seg">${SELF_SCALE.map((s,j)=>`<button type="button" class="opt ${v===j?'sel':''}" data-sa="${id}" data-v="${j}">${s}</button>`).join('')}</div></div>`}).join('')}</div>`).join('')}
  <div class="q"><div class="q-title">Какой у вас уровень, как вам кажется?</div><div class="opts">${['Не знаю','A0 — с нуля','A1','A2','B1','B2 и выше'].map(l=>`<button type="button" class="opt ${S.answers.selfLevel===l?'sel':''}" data-lvl="${l}">${l}</button>`).join('')}</div></div>
  </div>
- <div class="nav"><button class="btn ghost" id="back">← Назад</button><button class="btn" id="next">К заданиям →</button></div>`;
- app.querySelectorAll('[data-sa]').forEach(el=>el.onclick=()=>{S.self[el.dataset.sa]=+el.dataset.v;save();app.querySelectorAll(`[data-sa="${el.dataset.sa}"]`).forEach(d=>d.classList.toggle('sel',d===el));$('#sa_'+el.dataset.sa).style.background=''});
+ <div class="nav"><button class="btn ghost" id="back">${ic('back')}Назад</button><button class="btn" id="next">Перейти к заданиям</button></div>`;
+ app.querySelectorAll('[data-sa]').forEach(el=>el.onclick=()=>{S.self[el.dataset.sa]=+el.dataset.v;save();app.querySelectorAll(`[data-sa="${el.dataset.sa}"]`).forEach(d=>d.classList.toggle('sel',d===el));$('#sa_'+el.dataset.sa).classList.remove('err')});
  app.querySelectorAll('[data-lvl]').forEach(el=>el.onclick=()=>{S.answers.selfLevel=el.dataset.lvl;save();app.querySelectorAll('[data-lvl]').forEach(d=>d.classList.toggle('sel',d===el))});
  $('#back').onclick=()=>{S.page=PAGES.length-1;go('portrait')};
  $('#next').onclick=()=>{
   const miss=[];SELF.forEach(g=>g.items.forEach((_,i)=>{if(S.self[g.k+i]==null)miss.push(g.k+i)}));
-  if(miss.length){miss.forEach(id=>$('#sa_'+id).style.background='var(--bad-l)');$('#sa_'+miss[0]).scrollIntoView({behavior:'smooth',block:'center'});toast('Отметьте все утверждения');return}
+  if(miss.length){miss.forEach(id=>$('#sa_'+id).classList.add('err'));$('#sa_'+miss[0]).scrollIntoView({behavior:'smooth',block:'center'});toast('Отметьте все утверждения');return}
   if(!S.answers.selfLevel)S.answers.selfLevel='Не знаю';
   go('test');
  };
@@ -481,7 +625,7 @@ function rTest(){
  const lvl=LEVELS[S.test.stage],items=BANK[lvl],it=curItem();
  const doneBefore=LEVELS.slice(0,S.test.stage).reduce((s,l)=>s+BANK[l].length,0);
  const totalPossible=LEVELS.reduce((s,l)=>s+BANK[l].length,0);
- setProgress(.42+.45*((doneBefore+S.test.idx)/totalPossible),`Часть 3 · блок ${S.test.stage+1} · ${S.test.idx+1}/${items.length}`);
+ setProgress(.42+.5*((doneBefore+S.test.idx)/totalPossible),`Блок ${S.test.stage+1}, задание ${S.test.idx+1} из ${items.length}`);
  if(!S.test.order[it.id]){S.test.order[it.id]=shuffle(it.o.length);save()}
  const ord=S.test.order[it.id];
  const prev=S.test.res[it.id];
@@ -490,21 +634,21 @@ function rTest(){
  if(it.p){const P=PASSAGES[it.p];
   if(P.type==='read')ctx=`<div class="passage"><div class="pt">${esc(P.title)}</div>${P.text}</div>`;
   else{const left=2-(S.test.plays[it.p]||0);
-   ctx=`<div class="audio"><button class="play" id="play" ${left<=0?'disabled':''} aria-label="Слушать">▶</button><div><b>Прослушайте запись</b><div class="small">${left>0?`Можно прослушать ещё ${left} раз(а)`:'Прослушивания закончились'}</div></div></div>`}
+   ctx=`<div class="audio"><button class="play" id="play" ${left<=0?'disabled':''} aria-label="Слушать запись">${ic('play')}</button><div><b>Прослушайте запись</b><div class="small">${left>0?`Можно прослушать ещё ${left} раз(а)`:'Прослушивания закончились'}</div></div></div>`}
  }
  const isSpanishQ=it.skill==='gram'||(it.skill==='vocab'&&!/[а-я]/i.test(it.q));
  app.innerHTML=`<div class="card">
-  <div class="kicker">${SKILLS[it.skill]}</div>
+  <span class="skill-tag">${ic(it.skill)}${SKILLS[it.skill]}</span>
   ${ctx}
   ${it.ins?`<div class="test-ins">${esc(it.ins)}</div>`:(it.skill==='gram'?'<div class="test-ins">Выберите правильный вариант</div>':'')}
   <div class="test-q" ${isSpanishQ?'lang="es"':''}>${esc(it.q)}</div>
-  <div class="opts col">${ord.map(i=>`<button type="button" class="opt ${pendingAnswer===i?'sel':''}" data-ans="${i}" lang="es">${esc(it.o[i])}</button>`).join('')}</div>
-  <div class="nose opts"><button type="button" class="opt ${pendingAnswer==='nose'?'sel':''}" data-ans="nose">🤷 Не знаю</button></div>
+  <div class="opts col">${ord.map((i,j)=>`<button type="button" class="opt ${pendingAnswer===i?'sel':''}" data-ans="${i}" data-key="${j+1}"><span class="key">${'ABCD'[j]}</span><span ${/[а-яё]/i.test(it.o[i])?'':'lang="es"'}>${esc(it.o[i])}</span></button>`).join('')}</div>
+  <div class="nose opts"><button type="button" class="opt ${pendingAnswer==='nose'?'sel':''}" data-ans="nose">${ic('question')}Не знаю</button></div>
  </div>
- <div class="nav"><span></span><button class="btn" id="next" ${pendingAnswer==null?'disabled':''}>Дальше →</button></div>`;
+ <div class="nav"><span class="kbd-hint">Клавиши A–D или 1–4 для выбора, Enter для перехода</span><button class="btn" id="next" ${pendingAnswer==null?'disabled':''}>Далее</button></div>`;
  app.querySelectorAll('[data-ans]').forEach(el=>el.onclick=()=>{pendingAnswer=el.dataset.ans==='nose'?'nose':+el.dataset.ans;app.querySelectorAll('[data-ans]').forEach(d=>d.classList.toggle('sel',d===el));$('#next').disabled=false});
  const pl=$('#play');
- if(pl)pl.onclick=()=>{const P=PASSAGES[it.p];S.test.plays[it.p]=(S.test.plays[it.p]||0)+1;save();pl.disabled=true;pl.textContent='♪';
+ if(pl)pl.onclick=()=>{const P=PASSAGES[it.p];S.test.plays[it.p]=(S.test.plays[it.p]||0)+1;save();pl.disabled=true;pl.classList.add('on');
   playPassage(it.p,()=>{player=null;const y=window.scrollY;rTest();window.scrollTo(0,y)})};
  $('#next').onclick=()=>{
   if(pendingAnswer==null)return;
@@ -518,8 +662,8 @@ function rTest(){
  };
 }
 function rStageDone(){
- setProgress(.42+.45*(LEVELS.slice(0,S.test.stage+1).reduce((s,l)=>s+BANK[l].length,0)/LEVELS.reduce((s,l)=>s+BANK[l].length,0)),'Часть 3');
- app.innerHTML=`<div class="card hero"><div style="font-size:3rem">🌟</div><h2>¡Muy bien!</h2><p>Вы отлично справились с этим блоком. Дальше задания будут немного сложнее. Если что-то незнакомо, смело нажимайте «Не знаю».</p><button class="btn" id="go">Следующий блок →</button></div>`;
+ setProgress(.42+.5*(LEVELS.slice(0,S.test.stage+1).reduce((s,l)=>s+BANK[l].length,0)/LEVELS.reduce((s,l)=>s+BANK[l].length,0)),'Блок пройден');
+ app.innerHTML=`<div class="card center"><div class="badge-ic">${ic('flag')}</div><h2>¡Muy bien! Блок ${S.test.stage+1} пройден</h2><p class="lead" style="margin:0 auto 22px">Следующие задания будут сложнее. Если что-то незнакомо, выбирайте «Не знаю».</p><button class="btn" id="go">Перейти к блоку ${S.test.stage+2}</button></div>`;
  $('#go').onclick=()=>{S.test.stage++;S.test.idx=0;go('test')};
 }
 function stageStats(lvl){const items=BANK[lvl];let ans=0,cor=0,nose=0;items.forEach(it=>{const r=S.test.res[it.id];if(r){ans++;if(r.ok)cor++;if(r.choice==='nose')nose++}});return{reached:ans>0,total:items.length,ans,cor,nose,ratio:items.length?cor/items.length:0}}
@@ -528,16 +672,16 @@ function maxStage(){let m=0;LEVELS.forEach((l,i)=>{if(stageStats(l).reached)m=i}
 /* ---------- Письмо ---------- */
 function rWriting(){
  stamp('writing');
- setProgress(.9,'Часть 3 · Письмо');
+ setProgress(.95,'Письменное задание');
  const lvl=LEVELS[maxStage()],W=WRITING[lvl];
  const wc=t=>(t.trim().match(/\S+/g)||[]).length;
- app.innerHTML=`<div class="card"><div class="kicker">Последнее задание</div><h2>Напишите небольшой текст</h2>
-  <div class="note blue">${esc(W.t)}</div>
+ app.innerHTML=`<div class="card"><div class="page-head"><span class="label">Последнее задание</span><h2>Напишите небольшой текст</h2></div>
+  <div class="note blue">${ic('write')}<div>${esc(W.t)}</div></div>
   <p class="small muted">Пишите сами, без переводчика: ошибки — это нормально, по ним преподаватель поймёт, что важно разобрать. Ориентир: от ${W.min} слов.</p>
   <textarea id="wr" lang="es" style="min-height:200px" placeholder="Escribe aquí…">${esc(S.writing.text)}</textarea>
   <div class="counter" id="wc"></div>
  </div>
- <div class="nav"><button class="linkbtn" id="skip">Пропустить</button><button class="btn" id="next">Получить результаты →</button></div>`;
+ <div class="nav"><button class="linkbtn" id="skip">Пропустить</button><button class="btn" id="next">Завершить и посмотреть результат</button></div>`;
  const ta=$('#wr'),upd=()=>{const n=wc(ta.value);$('#wc').textContent=`Слов: ${n}`;S.writing.text=ta.value;S.writing.words=n;S.writing.lvl=lvl;save()};upd();
  ta.addEventListener('input',upd);
  ta.addEventListener('paste',()=>{S.writing.paste=(S.writing.paste||0)+1;save()});
@@ -595,7 +739,7 @@ const SKILL_ADVICE={listen:'больше слушать: короткие диа
 const SKILL_NICE={listen:'Аудирование',read:'Чтение',sit:'Ситуации',gram:'Грамматика',vocab:'Лексика'};
 
 function rResults(){
- setProgress(1,'Готово!');
+ setProgress(1,'Результат');
  const A=analyze(),a=S.answers;
  const name=(a.name||'').trim();
  let insight;
@@ -604,47 +748,46 @@ function rResults(){
  else insight='Вы очень точно чувствуете свой уровень: самооценка почти совпала с результатами заданий. Это отличная основа для осознанного обучения.';
  const goal=a.mainGoal||(a.goals||[])[0];
  const vals=A.axes.map(k=>A.test[k]),selfVals=A.axes.map(k=>A.selfS[A.map[k]]);
+ const LP={'A0–A1':.5,'A1':1,'A1+ / A2':1.5,'A2':2,'A2+ / B1':2.5,'B1':3,'B1+':3.4};
+ const pos=(LP[A.level]??1)/4*100;
+ const track=`<div class="lvl-track" aria-label="Уровень ${A.level}"><div class="track"></div><div class="fill" style="width:${pos}%"></div>${['A0','A1','A2','B1','B2'].map((l,i)=>`<div class="tick ${i/4*100<=pos+.1?'on':''}" style="left:${i/4*100}%"><i></i>${l}</div>`).join('')}<div class="pin" style="left:${pos}%">Вы здесь</div></div>`;
  app.innerHTML=`
- <div class="card hero">
-  <div class="kicker">Ваша карта испанского</div>
-  <h1>${name?esc(name)+', ':''}¡enhorabuena!</h1>
-  <p class="muted">Ориентировочный уровень по заданиям</p>
-  <div class="level-badge">${A.level}</div>
-  <p>${esc(A.levelNote)}</p>
-  <p class="small muted">Это предварительная оценка. Точный уровень преподаватель уточнит после устной части и письменного задания.</p>
+ <div class="card">
+  <div class="res-head"><div class="res-level">${A.level}<small>уровень по заданиям</small></div><div><h1 style="font-size:1.9rem;margin-bottom:.3em">${name?esc(name)+', ':''}¡enhorabuena!</h1><p style="margin:0">${esc(A.levelNote)}. Это предварительная оценка: точный уровень преподаватель уточнит после устной части и письменного задания.</p></div></div>
+  ${track}
  </div>
  <div class="card">
-  <h2>Ваши навыки</h2>
-  <div class="radar-wrap">${radar(A.axes.map(k=>SKILL_NICE[k]),[{vals:selfVals,color:'#2E3A6E',fill:'rgba(46,58,110,.08)',dash:true},{vals,color:'#C65D3B',fill:'rgba(198,93,59,.22)'}])}</div>
+  <h2>Профиль навыков</h2>
+  <div class="radar-wrap">${radar(A.axes.map(k=>SKILL_NICE[k]),[{vals:selfVals,color:'#2E3A6E',fill:'rgba(46,58,110,.07)',dash:true},{vals,color:'#C65D3B',fill:'rgba(198,93,59,.2)'}])}</div>
   <div class="legend"><span><i style="background:#C65D3B"></i>Результат заданий</span><span><i style="background:#2E3A6E"></i>Ваша самооценка</span></div>
-  <div class="note ${A.avgGap<-15?'green':'blue'}" style="margin-top:16px">${insight}</div>
-  <p class="small muted">«Ситуации» — это умение подобрать правильную фразу в живой ситуации. Говорение и письмо преподаватель оценит отдельно.</p>
+  <div class="note ${A.avgGap<-15?'green':'blue'}" style="margin-top:18px">${ic(A.avgGap<-15?'trend':'info')}<div>${insight}</div></div>
+  <p class="small muted" style="margin:0">«Ситуации» показывают, умеете ли вы подобрать нужную фразу в живой ситуации. Говорение и письмо преподаватель оценит отдельно.</p>
  </div>
  <div class="two">
-  <div class="card"><h3>💪 Ваши сильные стороны</h3><ul class="list plus">${A.strengths.length?A.strengths.map(x=>`<li>${esc(x.it.topic)}</li>`).join(''):'<li>Смелость начать! Всё остальное построим вместе</li>'}</ul></div>
-  <div class="card"><h3>🌱 Зоны роста</h3><ul class="list grow">${A.growth.length?A.growth.map(x=>`<li>${esc(x.it.topic)}</li>`).join(''):'<li>Ошибок почти нет: пора браться за уровень B2</li>'}</ul></div>
+  <div class="card"><div class="card-h"><span class="gi ok">${ic('check')}</span><h3>Сильные стороны</h3></div><ul class="list">${A.strengths.length?A.strengths.map(x=>`<li>${esc(x.it.topic)}</li>`).join(''):'<li>Вы уже начали, а остальное выстроим вместе</li>'}</ul></div>
+  <div class="card"><div class="card-h"><span class="gi tr">${ic('trend')}</span><h3>Зоны роста</h3></div><ul class="list">${A.growth.length?A.growth.map(x=>`<li>${esc(x.it.topic)}</li>`).join(''):'<li>Ошибок почти нет: можно переходить к уровню B2</li>'}</ul></div>
  </div>
  <div class="card">
   <h2>Что это значит для вашей цели</h2>
-  ${goal?`<p><b>Главная цель: ${esc(goalLabel(goal))}.</b> ${esc(GOAL_FOCUS[goal]||'')}</p>`:''}
-  <p>Самый сильный навык сейчас — <b>${SKILL_NICE[A.strongest].toLowerCase()}</b>. Больше всего пользы принесёт ${SKILL_ADVICE[A.weakest]}.</p>
-  ${(a.situations||[]).length?`<p class="small muted" style="margin-bottom:6px">Ситуации, с которых начнём:</p><div class="tags">${a.situations.map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>`:''}
+  ${goal?`<p><b>Главная цель: ${esc(goalLabel(goal)).toLowerCase()}.</b> ${esc(GOAL_FOCUS[goal]||'')}</p>`:''}
+  <p>Самый сильный навык сейчас: <b>${SKILL_NICE[A.strongest].toLowerCase()}</b>. Больше всего пользы принесёт ${SKILL_ADVICE[A.weakest]}.</p>
+  ${(a.situations||[]).length?`<span class="label" style="margin-top:14px">Ситуации, с которых начнём</span><div class="tags">${a.situations.map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>`:''}
  </div>
  <div class="card">
-  <h2>Что дальше?</h2>
-  <p>Ваши ответы уже у преподавателя. На их основе будет составлена <b>персональная программа</b>: темы, ситуации, формат уроков и домашних заданий под ваш ритм и интересы.</p>
+  <h2>Что дальше</h2>
+  <p>Ваши ответы отправлены преподавателю. На их основе будет составлена персональная программа: темы, ситуации, формат уроков и домашних заданий под ваш ритм и интересы.</p>
   <div class="send-status" id="sendStatus"></div>
-  <div class="nav noprint" style="margin-top:14px">
-   <button class="btn ghost sm" id="print">🖨 Сохранить / распечатать</button>
-   <button class="btn ghost sm" id="resend">Отправить ещё раз</button>
+  <div class="nav noprint" style="margin-top:16px">
+   <button class="btn ghost sm" id="print">${ic('printer')}Сохранить в PDF</button>
+   <button class="btn ghost sm" id="resend">${ic('send')}Отправить ещё раз</button>
   </div>
  </div>
- <div class="card noprint" style="background:transparent;border-style:dashed;box-shadow:none">
-  <div class="kicker">Для преподавателя</div>
-  <div class="nav" style="margin-top:6px">
-   <button class="btn indigo sm" id="toOral">🎤 Устная часть</button>
-   <button class="btn ghost sm" id="copy">Скопировать отчёт</button>
-   <button class="btn ghost sm" id="dl">Скачать отчёт .txt</button>
+ <div class="teacher-strip noprint">
+  <span class="label">Для преподавателя</span>
+  <div class="nav" style="margin-top:8px">
+   <button class="btn indigo sm" id="toOral">${ic('mic')}Устная часть</button>
+   <button class="btn ghost sm" id="copy">${ic('copy')}Скопировать отчёт</button>
+   <button class="btn ghost sm" id="dl">${ic('download')}Скачать .txt</button>
    <button class="linkbtn" id="new">Новый ученик</button>
   </div>
  </div>`;
@@ -654,7 +797,7 @@ function rResults(){
  $('#dl').onclick=()=>download(buildReport(A),`diagnostico_${(name||'alumno').replace(/\s+/g,'_')}.txt`);
  $('#toOral').onclick=()=>go('oral');
  $('#new').onclick=()=>{if(confirm('Очистить ответы и начать тест для нового ученика?')){S=fresh();save();go('home')}};
- if(!S.sent)sendReport(false);else $('#sendStatus').innerHTML='<span style="color:var(--ok)">✓ Результаты отправлены преподавателю</span>';
+ if(!S.sent)sendReport(false);else setSendStatus('ok');
 }
 
 /* ================== ОТЧЁТ ДЛЯ ПРЕПОДАВАТЕЛЯ ================== */
@@ -754,10 +897,11 @@ async function tgSend(text){
   if(!r.ok)throw new Error('Telegram '+r.status);
  }
 }
+function setSendStatus(st){const b=$('#sendStatus');if(!b)return;b.className='send-status '+(st==='ok'?'ok':st==='bad'?'bad':'');b.innerHTML=st==='ok'?ic('check')+'Результаты отправлены преподавателю':st==='bad'?'Не удалось отправить автоматически. Проверьте интернет и нажмите «Отправить ещё раз».':'Отправка результатов преподавателю…'}
 async function sendReport(manual){
- const box=$('#sendStatus');if(box)box.textContent='Отправляю результаты преподавателю…';
- try{await tgSend(buildReport());S.sent=true;save();if(box)box.innerHTML='<span style="color:var(--ok)">✓ Результаты отправлены преподавателю</span>';if(manual)toast('Отправлено')}
- catch(e){if(box)box.innerHTML='<span style="color:var(--bad)">Не удалось отправить автоматически. Нажмите «Отправить ещё раз» или «Скопировать отчёт» и пришлите его преподавателю.</span>'}
+ setSendStatus('wait');
+ try{await tgSend(buildReport());S.sent=true;save();setSendStatus('ok');if(manual)toast('Отправлено преподавателю')}
+ catch(e){setSendStatus('bad')}
 }
 function copyText(t){
  const done=()=>toast('Отчёт скопирован');
@@ -773,36 +917,43 @@ function rOral(){
  const hasTest=!!S.times.end;
  let lvlHint='';
  if(hasTest){const A=analyze();lvlHint=`<div class="note blue">По тесту: <b>${A.level}</b>. Начните с карточек этого уровня, при необходимости спуститесь или поднимитесь на уровень.</div>`}
- app.innerHTML=`<div class="card"><div class="kicker">Режим преподавателя</div><h2>🎤 Устная часть</h2>
-  <p class="small muted">Выберите 3–4 карточки по уровню ученика. «Показать ученику» открывает задание крупно, чтобы показать его через демонстрацию экрана. Оцените каждую карточку и общие критерии.</p>
+ app.innerHTML=`<div class="card"><div class="page-head"><span class="label">Режим преподавателя</span><h1>Устная часть</h1><p>Выберите 3–4 карточки по уровню ученика. «Показать ученику» открывает задание крупно, чтобы показать его через демонстрацию экрана. Оцените каждую карточку и общие критерии.</p></div>
   <div class="q"><div class="q-title">Ученик</div><input type="text" id="oName" value="${esc(o.name||'')}" placeholder="Имя ученика"></div>
   ${lvlHint}
-  ${ORAL.map((c,i)=>`<div class="oral-card"><div><span class="lv">${c.lvl}</span><b>${esc(c.t)}</b></div><p style="margin:6px 0 0">${esc(c.task)}</p><div class="role">🎭 ${esc(c.role)}</div>
-   <div class="rate">${ORAL_RATE.map((r,j)=>`<button type="button" class="opt ${o.rates[i]===j?'sel':''}" data-or="${i}" data-v="${j}">${r}</button>`).join('')}<button class="btn ghost sm" data-show="${i}">Показать ученику</button></div>
+  ${ORAL.map((c,i)=>`<div class="oral-card"><div><span class="lv">${c.lvl}</span><b>${esc(c.t)}</b></div><p style="margin:6px 0 0">${esc(c.task)}</p><span class="role">Роль преподавателя: ${esc(c.role)}</span>
+   <div class="rate">${ORAL_RATE.map((r,j)=>`<button type="button" class="opt ${o.rates[i]===j?'sel':''}" data-or="${i}" data-v="${j}">${r}</button>`).join('')}<button class="btn ghost sm" data-show="${i}">${ic('board')}Показать ученику</button></div>
    <input type="text" data-on="${i}" value="${esc(o.notes[i]||'')}" placeholder="Заметка: типичные ошибки, что удалось" style="margin-top:8px;font-size:.88rem;padding:8px 12px"></div>`).join('')}
   <h3 style="margin-top:22px">Общие критерии</h3>
   ${ORAL_CRIT.map(([k,l])=>`<div class="q" style="margin-bottom:12px"><div class="q-title" style="font-weight:500">${l}</div><div class="opts">${[1,2,3,4,5].map(v=>`<button type="button" class="opt ${o.crit[k]===v?'sel':''}" data-cr="${k}" data-v="${v}" style="width:46px;text-align:center">${v}</button>`).join('')}</div></div>`).join('')}
   <div class="q"><div class="q-title">Общий комментарий</div><textarea id="oCom" placeholder="Впечатление, произношение, что важно учесть в программе">${esc(o.comment||'')}</textarea></div>
   <div class="send-status" id="oStatus"></div>
  </div>
- <div class="nav"><button class="btn ghost" id="back">← Режим преподавателя</button><button class="btn indigo" id="send">${hasTest?'Отправить полный отчёт':'Отправить устную часть'} в Telegram</button></div>`;
+ <div class="nav"><button class="btn ghost" id="back">${ic('back')}Режим преподавателя</button><button class="btn indigo" id="send">${hasTest?'Отправить полный отчёт':'Отправить устную часть'} в Telegram</button></div>`;
  $('#oName').oninput=e=>{o.name=e.target.value;save()};
  $('#oCom').oninput=e=>{o.comment=e.target.value;save()};
  app.querySelectorAll('[data-on]').forEach(el=>el.oninput=()=>{o.notes[el.dataset.on]=el.value;save()});
  app.querySelectorAll('[data-or]').forEach(el=>el.onclick=()=>{const i=el.dataset.or,v=+el.dataset.v;o.rates[i]=o.rates[i]===v?null:v;if(o.rates[i]==null)delete o.rates[i];save();app.querySelectorAll(`[data-or="${i}"]`).forEach(d=>d.classList.toggle('sel',+d.dataset.v===o.rates[i]))});
  app.querySelectorAll('[data-cr]').forEach(el=>el.onclick=()=>{o.crit[el.dataset.cr]=+el.dataset.v;save();app.querySelectorAll(`[data-cr="${el.dataset.cr}"]`).forEach(d=>d.classList.toggle('sel',d===el))});
- app.querySelectorAll('[data-show]').forEach(el=>el.onclick=()=>{const c=ORAL[+el.dataset.show];const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="kicker" style="color:#F3D9CC">${c.lvl} · Situación</div><h2>${esc(c.t)}</h2><p>${esc(c.task)}</p><button class="btn">Закрыть</button>`;ov.querySelector('button').onclick=()=>ov.remove();document.body.appendChild(ov)});
+ app.querySelectorAll('[data-show]').forEach(el=>el.onclick=()=>{const c=ORAL[+el.dataset.show];const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="ol">Situación, ${c.lvl}</div><h2>${esc(c.t)}</h2><p>${esc(c.task)}</p><button class="btn">Закрыть</button>`;ov.querySelector('button').onclick=()=>ov.remove();document.body.appendChild(ov)});
  $('#back').onclick=()=>go('teacher');
  $('#send').onclick=async()=>{
   const box=$('#oStatus');box.textContent='Отправляю…';
   let text;
   if(hasTest)text=buildReport();
   else{const b=buildOralBlock();if(!b){box.textContent='Сначала оцените хотя бы одну карточку.';return}text=['🎤 УСТНАЯ ЧАСТЬ · EspañolPro',`Ученик: ${o.name||'—'}`,`Дата: ${new Date().toLocaleString('ru-RU')}`,'',...b].join('\n')}
-  try{await tgSend(text);box.innerHTML='<span style="color:var(--ok)">✓ Отправлено</span>'}catch(e){box.innerHTML='<span style="color:var(--bad)">Не удалось отправить. Скопируйте отчёт на странице результатов.</span>'}
+  try{await tgSend(text);box.innerHTML='<span style="color:var(--ok)">Отправлено</span>'}catch(e){box.innerHTML='<span style="color:var(--bad)">Не удалось отправить. Скопируйте отчёт на странице результатов.</span>'}
  };
 }
 
 /* ================== СТАРТ ================== */
+document.addEventListener('keydown',e=>{
+ if(S.screen!=='test'||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.metaKey||e.ctrlKey||e.altKey)return;
+ const k=e.key.toLowerCase();const map={a:1,b:2,c:3,d:4,'1':1,'2':2,'3':3,'4':4};
+ if(map[k]){const el=app.querySelector(`[data-key="${map[k]}"]`);if(el){el.click();e.preventDefault()}}
+ else if(k==='0'||k==='?'){const el=app.querySelector('[data-ans="nose"]');if(el)el.click()}
+ else if(k==='enter'){const n=$('#next');if(n&&!n.disabled){n.click();e.preventDefault()}}
+});
+document.getElementById('markIc').innerHTML=ic('pin');
 document.getElementById('home').onclick=()=>{stopAudio();if(S.screen==='home')return;if(FLOW.includes(S.screen)){S.resume=S.screen;save()}S.screen='home';render();window.scrollTo(0,0)};
 (function init(){
  const saved=loadSaved();
