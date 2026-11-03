@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi mapa del español · Диагностика EspañolPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,700;1,500&family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--terra:#C65D3B;--terra-d:#A84A2C;--terra-l:#F3D9CC;--indigo:#2E3A6E;--indigo-l:#DDE1F0;--cream:#FBF5EC;--card:#FFFDF9;--ink:#2B2620;--muted:#7A6F63;--line:#E8DDCD;--ok:#2F8F5B;--ok-l:#D8F0E2;--bad:#C0392B;--bad-l:#F8DAD5;--warn:#B7791F;--warn-l:#FCEFD6}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Poppins,system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55}
+h1,h2,h3{font-family:Lora,Georgia,serif;color:var(--indigo);line-height:1.25;margin:0 0 .45em;font-weight:700}
+h1{font-size:2rem}h2{font-size:1.45rem}h3{font-size:1.1rem}
+p{margin:0 0 .8em}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 90px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;min-height:28px}
+.brand{font-family:Lora;font-style:italic;color:var(--terra);font-size:1.05rem}
+.brand b{color:var(--indigo);font-style:normal}
+.sec-label{font-size:.8rem;color:var(--muted);text-align:right}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:20px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--terra),#E39A6C);width:0;transition:width .45s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(46,58,110,.05);margin-bottom:16px}
+.kicker{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:600;margin-bottom:6px}
+.muted{color:var(--muted)}.small{font-size:.85rem}
+.q{margin:0 0 24px}
+.q:last-child{margin-bottom:4px}
+.q-title{font-weight:600;margin-bottom:4px}
+.q-hint{color:var(--muted);font-size:.84rem;margin-bottom:8px}
+.q.err .q-title{color:var(--bad)}
+.q.err .opts,.q.err input,.q.err .bip{outline:2px dashed var(--bad-l);outline-offset:4px;border-radius:12px}
+.opt-tag{font-size:.72rem;color:var(--muted);font-weight:400;margin-left:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.opts.col{flex-direction:column}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 14px;cursor:pointer;font:inherit;font-size:.93rem;color:var(--ink);text-align:left;transition:.15s;line-height:1.35}
+.opt:hover{border-color:#D9B9A6}
+.opt.sel{border-color:var(--terra);background:var(--terra-l)}
+.opts.col .opt{padding:13px 16px;font-size:1rem}
+input[type=text],textarea{width:100%;font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;background:#fff;color:var(--ink)}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--indigo)}
+textarea{min-height:90px;resize:vertical}
+.bip{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:8px 0 14px}
+.bip .l{font-size:.86rem;text-align:right}.bip .r{font-size:.86rem}
+.dots{display:flex;gap:6px}
+.dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:#fff;cursor:pointer;padding:0}
+.dot.sel{background:var(--indigo);border-color:var(--indigo)}
+.dot:nth-child(3){width:24px;height:24px;margin-top:3px}
+.scale10{display:flex;gap:5px;flex-wrap:wrap}
+.scale10 .opt{width:42px;text-align:center;padding:9px 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:13px 22px;font:inherit;font-weight:600;cursor:pointer;background:var(--terra);color:#fff;transition:.15s}
+.btn:hover{background:var(--terra-d)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--indigo);border:1.5px solid var(--indigo-l)}
+.btn.ghost:hover{background:var(--indigo-l)}
+.btn.indigo{background:var(--indigo)}.btn.indigo:hover{background:#222c57}
+.btn.sm{padding:8px 14px;font-size:.88rem}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:.85rem;padding:4px}
+.steps{display:grid;gap:10px;margin:16px 0}
+.step{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.step .n{flex:0 0 32px;height:32px;border-radius:50%;background:var(--terra-l);color:var(--terra);font-weight:700;display:flex;align-items:center;justify-content:center;font-family:Lora}
+.note{background:var(--warn-l);border-radius:12px;padding:12px 14px;font-size:.9rem;margin:12px 0}
+.note.blue{background:var(--indigo-l)}
+.note.green{background:var(--ok-l)}
+/* self assessment */
+.sa-group{margin-bottom:22px}
+.sa-group h3{display:flex;align-items:center;gap:8px}
+.sa-item{border-top:1px solid var(--line);padding:12px 0}
+.sa-item p{margin:0 0 8px;font-size:.94rem}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg .opt{text-align:center;padding:8px 4px;font-size:.82rem}
+/* test */
+.passage{background:#fff;border:1px solid var(--line);border-left:4px solid var(--indigo);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-family:Lora;font-size:1.02rem}
+.passage .pt{font-family:Poppins;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.audio{display:flex;align-items:center;gap:12px;background:var(--indigo-l);border-radius:12px;padding:12px 14px;margin-bottom:16px;flex-wrap:wrap}
+.play{width:52px;height:52px;border-radius:50%;border:0;background:var(--indigo);color:#fff;font-size:1.3rem;cursor:pointer;flex:0 0 52px}
+.play:disabled{opacity:.35;cursor:not-allowed}
+.test-q{font-family:Lora;font-size:1.3rem;color:var(--indigo);margin:4px 0 14px}
+.test-ins{font-size:.88rem;color:var(--muted)}
+.nose{margin-top:10px}
+.nose .opt{border-style:dashed;color:var(--muted)}
+.nose .opt.sel{color:var(--ink);background:var(--warn-l);border-color:var(--warn)}
+.counter{font-size:.82rem;color:var(--muted);margin-top:6px}
+/* results */
+.hero{text-align:center;padding:30px 20px}
+.level-badge{display:inline-block;font-family:Lora;font-size:2.6rem;font-weight:700;color:#fff;background:var(--terra);border-radius:20px;padding:8px 26px;margin:10px 0 6px}
+.radar-wrap{display:flex;justify-content:center}
+.legend{display:flex;justify-content:center;gap:18px;font-size:.85rem;margin-top:4px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.list{margin:0;padding:0;list-style:none}
+.list li{padding:8px 0 8px 28px;position:relative;border-bottom:1px dashed var(--line);font-size:.94rem}
+.list li:last-child{border-bottom:0}
+.list li::before{position:absolute;left:0;top:7px;font-weight:700}
+.list.plus li::before{content:"✓";color:var(--ok)}
+.list.grow li::before{content:"→";color:var(--terra)}
+.skillrow{display:grid;grid-template-columns:120px 1fr 44px;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+.sbar{height:10px;background:var(--line);border-radius:99px;position:relative;overflow:visible}
+.sbar i{position:absolute;left:0;top:0;height:100%;border-radius:99px;background:var(--terra)}
+.sbar b{position:absolute;top:-4px;width:3px;height:18px;background:var(--indigo);border-radius:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{background:var(--indigo-l);color:var(--indigo);border-radius:99px;padding:4px 11px;font-size:.82rem}
+.send-status{font-size:.88rem;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:.9rem;transition:.3s;z-index:99;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+/* oral */
+.oral-card{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:#fff}
+.oral-card .lv{font-size:.75rem;font-weight:700;color:#fff;background:var(--indigo);border-radius:6px;padding:2px 7px;margin-right:6px}
+.oral-card .role{font-size:.85rem;color:var(--muted);margin:6px 0 10px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate .opt{font-size:.8rem;padding:6px 10px}
+.overlay{position:fixed;inset:0;background:var(--indigo);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;z-index:50;text-align:center}
+.overlay h2{color:#fff;font-size:2.2rem}
+.overlay p{font-size:1.5rem;max-width:900px;font-family:Lora;line-height:1.45}
+.overlay .btn{margin-top:30px}
+@media (max-width:600px){
+ h1{font-size:1.6rem}.card{padding:18px}
+ .two{grid-template-columns:1fr}
+ .bip{grid-template-columns:1fr 1fr;gap:6px 14px}
+ .bip .dots{order:1;grid-column:1/3;justify-content:space-between}
+ .bip .l{order:2;text-align:left;font-size:.8rem}.bip .r{order:3;text-align:right;font-size:.8rem}
+ .seg .opt{font-size:.74rem}
+ .skillrow{grid-template-columns:92px 1fr 40px;font-size:.82rem}
+ .test-q{font-size:1.15rem}
+}
+@media print{
+ body{background:#fff}.nav,.btn,.linkbtn,.top .sec-label,.bar,.noprint{display:none!important}
+ .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><div class="brand">Mi mapa del español · <b>EspañolPro</b></div><div class="sec-label" id="secLabel"></div></div>
+ <div class="bar" id="bar"><i></i></div>
+ <main id="app"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================== НАСТРОЙКИ ================== */
+const TG_TOKEN='8753603224:AAEqPs0LuyK1SuF0K2hQWj2Sdf9IvKOSXK8';
+const TG_CHAT='396389345';
+const LS_KEY='espanolpro_diag_v1';
+const PASS_RATIO=0.6; // доля верных ответов для перехода на следующий уровень
+
+/* ================== БЛОК 1: ПОРТРЕТ ================== */
+const GOALS=[['travel','Путешествия'],['relocate','Переезд / жизнь в испаноязычной стране'],['work','Работа, карьера'],['exam','Экзамен (DELE, SIELE, IGCSE и др.)'],['people','Общение с друзьями, партнёром, семьёй'],['culture','Кино, музыка, книги, культура'],['study','Учёба в школе или вузе'],['self','Для себя, для развития']];
+const hasExp=a=>a.expLen&&a.expLen!=='Начинаю впервые';
+const PAGES=[
+ {title:'Знакомство',sub:'Пара слов о вас',qs:[
+  {id:'name',type:'text',q:'Как вас зовут?',ph:'Имя'},
+  {id:'age',type:'single',q:'Ваш возраст',opts:['до 14','14–17','18–25','26–35','36–50','50+']},
+  {id:'occupation',type:'text',q:'Чем вы занимаетесь?',hint:'Учёба, работа, сфера: так я подберу полезную для вас лексику',ph:'Например: дизайнер, студентка, IT',optional:true}
+ ]},
+ {title:'Зачем вам испанский',sub:'От ответа зависит вся программа',qs:[
+  {id:'goals',type:'multi',q:'Для чего вы учите испанский?',hint:'Можно выбрать несколько',opts:GOALS},
+  {id:'mainGoal',type:'single',q:'А что из этого самое главное?',dyn:'goals',showIf:a=>(a.goals||[]).length>1},
+  {id:'deadline',type:'single',q:'Есть ли конкретный срок: поездка, экзамен, переезд?',opts:['Нет, учусь без дедлайна','В ближайшие 3 месяца','Через 3–6 месяцев','Через 6–12 месяцев','Больше чем через год']},
+  {id:'destination',type:'text',q:'Куда собираетесь или какой экзамен сдаёте?',ph:'Например: Барселона в мае, DELE A2',optional:true,showIf:a=>(a.goals||[]).some(g=>['travel','relocate','exam'].includes(g))}
+ ]},
+ {title:'Ваши ситуации',sub:'Где испанский нужен вам на самом деле',qs:[
+  {id:'situations',type:'multi',max:5,q:'В каких ситуациях вам важнее всего справляться на испанском?',hint:'Выберите до 5: это станет основой программы',opts:['Аэропорт и транспорт','Отель и жильё','Кафе и ресторан','Покупки и рынок','Спросить дорогу, ориентироваться в городе','Врач и аптека','Решить проблему: жалоба, потеря, поломка','Знакомство и small talk','Телефонный звонок','Экскурсии и музеи','Рабочая переписка и встречи','Понимать фильмы, сериалы, песни','Переписка в мессенджерах']},
+  {id:'variant',type:'single',q:'Какой испанский вам ближе?',opts:['Испания','Латинская Америка','Конкретная страна','Без разницы']},
+  {id:'variantText',type:'text',q:'Какая страна?',optional:true,showIf:a=>a.variant==='Конкретная страна'}
+ ]},
+ {title:'Ваш опыт',sub:'Что уже было и что сработало',qs:[
+  {id:'expLen',type:'single',q:'Сколько вы уже изучали испанский?',opts:['Начинаю впервые','Меньше 6 месяцев','6–12 месяцев','1–2 года','Больше 2 лет']},
+  {id:'expWhere',type:'multi',q:'Как вы учились раньше?',hint:'Можно выбрать несколько',opts:['В школе','В вузе','На курсах','С репетитором','Приложения (Duolingo и др.)','Самостоятельно: книги, видео','Жил(а) или бывал(а) в стране'],showIf:hasExp},
+  {id:'expGood',type:'textarea',q:'Что в прошлом обучении нравилось и помогало?',optional:true,showIf:hasExp},
+  {id:'expBad',type:'textarea',q:'А что не работало или раздражало?',optional:true,showIf:hasExp},
+  {id:'expStop',type:'multi',q:'Если делали перерывы, то почему?',optional:true,opts:['Не хватало времени','Стало скучно','Было слишком сложно','Не видел(а) прогресса','Пропала цель','Не подошёл преподаватель или формат','Перерывов не было'],showIf:hasExp}
+ ]},
+ {title:'Ваш ритм',sub:'Чтобы программа вписалась в жизнь',qs:[
+  {id:'lessons',type:'single',q:'Сколько занятий в неделю вам комфортно?',opts:['1','2','3 и больше']},
+  {id:'selfStudy',type:'single',q:'Сколько времени готовы уделять испанскому самостоятельно?',opts:['Почти нисколько','10–15 минут в день','20–30 минут в день','30–60 минут в день','Больше часа в день']},
+  {id:'homework',type:'single',q:'Как вы относитесь к домашним заданиям?',opts:['Люблю, давайте побольше','Нормально, если немного и по делу','Лучше короткие и интерактивные (игры, тренажёры)','Предпочитаю обходиться без домашки']},
+  {id:'when',type:'single',q:'Когда вам удобнее заниматься самостоятельно?',optional:true,opts:['Утром','В дороге, с телефона','Вечером','По выходным','Как получится']}
+ ]},
+ {title:'Каким должен быть урок',sub:'Отметьте точку между двумя вариантами. Середина значит «и то и другое»',qs:[
+  {id:'b_talk',type:'bipolar',left:'Больше разговора',right:'Больше упражнений и структуры'},
+  {id:'b_gram',type:'bipolar',left:'Правило объясняют чётко, по схеме',right:'Понимаю правило из примеров и контекста'},
+  {id:'b_plan',type:'bipolar',left:'Чёткий план и система',right:'Гибкость, темы по настроению'},
+  {id:'b_pace',type:'bipolar',left:'Спокойный темп',right:'Интенсивно, чтобы быстрее'},
+  {id:'activities',type:'multi',q:'Какие задания вам нравятся?',hint:'Выберите всё, что нравится',opts:['Диалоги и ролевые игры','Игры, квесты, детективы','Фильмы, сериалы, короткие видео','Песни','Чтение статей и историй','Грамматические упражнения','Карточки со словами','Письменные задания','Подкасты и аудио','Обсуждение тем и мнений','Интерактивные тренажёры онлайн']}
+ ]},
+ {title:'Ошибки и трудности',sub:'Честные ответы помогут обойти больные места',qs:[
+  {id:'correction',type:'single',q:'Как исправлять ваши ошибки?',opts:['Сразу, как только ошибся(лась)','В конце задания или урока','Только важные, чтобы не сбивать','Записывать в чат, разберу потом']},
+  {id:'difficulties',type:'multi',q:'Что для вас сейчас самое трудное?',hint:'Можно выбрать несколько',opts:['Страшно начать говорить','Не понимаю быструю речь','Слова быстро забываются','Спряжения глаголов','Прошедшие времена','Ser / estar','Произношение','Писать без ошибок','Нет практики с живыми людьми','Сложно заниматься регулярно']},
+  {id:'worries',type:'textarea',q:'Что ещё важно знать преподавателю?',hint:'Страхи, особенности, пожелания: всё, что поможет',optional:true}
+ ]},
+ {title:'Ваши интересы',sub:'Отсюда возьмём темы, тексты и видео',qs:[
+  {id:'interests',type:'multi',q:'Что вам интересно?',hint:'Можно выбрать несколько',opts:['Путешествия','Еда и кулинария','Кино и сериалы','Музыка и танцы','Спорт','Искусство и дизайн','История','Технологии','Природа и животные','Мода и красота','Психология','Бизнес и финансы','Книги','Игры']},
+  {id:'interestsText',type:'text',q:'Любимые сериалы, исполнители, блогеры, хобби',optional:true,ph:'Например: «Бумажный дом», Росалия, йога'},
+  {id:'success',type:'single',q:'Как вы поймёте, что занятия работают?',opts:['Смогу спокойно объясниться в поездке','Буду понимать сериалы и песни','Сдам экзамен','Начну говорить без долгих пауз','Смогу переписываться и общаться с людьми','Буду видеть прогресс в результатах тестов']},
+  {id:'motivation',type:'scale10',q:'Насколько сильная у вас мотивация сейчас?',hint:'1 — «надо бы», 10 — «горю желанием»'}
+ ]}
+];
+
+/* ================== БЛОК 2: САМООЦЕНКА ================== */
+const SELF_SCALE=['Не могу','С трудом','В целом да','Легко'];
+const SELF=[
+ {k:'listen',t:'Понимание на слух',ic:'🎧',items:['Понимаю, когда со мной говорят медленно и чётко о простом: имя, цены, время.','Понимаю объявления на вокзале или в аэропорту и простые диалоги в магазине.','Понимаю основное в разговоре носителей на знакомые темы, если говорят не слишком быстро.']},
+ {k:'read',t:'Чтение',ic:'📖',items:['Читаю вывески, меню, простые объявления.','Понимаю короткое письмо или сообщение, например от хозяина квартиры.','Понимаю основную мысль статьи или блога на знакомую тему.']},
+ {k:'speak',t:'Говорение',ic:'💬',items:['Могу поздороваться, представиться, заказать еду, купить билет.','Могу объясниться в отеле, спросить дорогу, решить простую проблему.','Могу рассказать о поездке, высказать мнение и поддерживать разговор без долгих пауз.']},
+ {k:'write',t:'Письмо',ic:'✍️',items:['Могу написать о себе пару предложений, заполнить анкету.','Могу написать короткое сообщение: забронировать, договориться о встрече.','Могу написать связный текст: отзыв или письмо с рассказом о событиях.']},
+ {k:'gram',t:'Грамматика',ic:'🧩',items:['Уверенно пользуюсь настоящим временем, ser/estar, hay.','Различаю прошедшие времена (Indefinido, Perfecto, Imperfecto) и использую ir a + инфинитив.','Использую subjuntivo в простых случаях (espero que…, cuando + будущее) и condicional.']},
+ {k:'vocab',t:'Словарный запас',ic:'🗂️',items:['Знаю базовые слова: числа, еда, семья, город.','Знаю слова для путешествий: транспорт, жильё, покупки, здоровье.','Могу описать чувства, мнения, проблемы; в бытовых темах слов почти всегда хватает.']}
+];
+
+/* ================== БЛОК 3: ТЕСТ ================== */
+const SKILLS={gram:'Грамматика',vocab:'Лексика',read:'Чтение',listen:'Аудирование',sit:'Ситуации'};
+const PASSAGES={
+ a1r:{type:'read',title:'Информация в отеле',text:'<b>Hotel Sol</b><br>Habitación doble: 60 € la noche.<br>El desayuno no está incluido (8 € por persona).<br>La recepción está abierta 24 horas.<br>La piscina abre de 10:00 a 20:00.'},
+ a1l:{type:'listen',rate:.82,text:'Hola, me llamo Marta. Soy de Valencia, pero vivo en Madrid. Trabajo en un hotel y los fines de semana estudio inglés.'},
+ a2r:{type:'read',title:'Сообщение от хозяйки квартиры',text:'¡Hola! Te escribo para darte información sobre el apartamento. Las llaves están en una caja junto a la puerta; el código es 4721. El wifi se llama «CasaLuna» y la contraseña está en la nevera. Por favor, no dejes la basura en el balcón: los contenedores están al final de la calle. El domingo tienes que dejar el apartamento antes de las 11. ¡Que disfrutes de Sevilla!<br><i>Lucía</i>'},
+ a2l:{type:'listen',rate:.9,text:'Atención, por favor. El tren con destino a Barcelona, que tenía que salir a las diez y cuarto, sale con veinte minutos de retraso. Saldrá por la vía cuatro. Disculpen las molestias.'},
+ b1r:{type:'read',title:'Статья',text:'Cada vez más vecinos de ciudades como Barcelona o Palma se quejan del turismo masivo. Según ellos, el precio del alquiler ha subido tanto que muchos jóvenes ya no pueden vivir en su propio barrio. Sin embargo, otros recuerdan que el turismo da trabajo a miles de personas. Por eso, algunos ayuntamientos han decidido limitar los pisos turísticos en lugar de reducir el número de visitantes.'},
+ b1l:{type:'listen',rate:.97,text:'Hola, soy Javier, de la agencia de viajes. Te llamo porque ha habido un cambio en tu vuelo del jueves: en lugar de salir a las nueve de la mañana, saldrá a las doce y media. Si este horario no te viene bien, podemos cambiarte al vuelo del viernes sin coste adicional. Llámame antes del miércoles, por favor. ¡Gracias!'}
+};
+// В каждом задании первый вариант (o[0]) — правильный; варианты перемешиваются при показе.
+const BANK={
+ A1:[
+  {id:'a1g1',skill:'gram',topic:'ser: происхождение',q:'Yo ___ de Rusia.',o:['soy','estoy','tengo','es']},
+  {id:'a1g2',skill:'gram',topic:'estar: местоположение',q:'Madrid ___ en el centro de España.',o:['está','es','hay','tiene']},
+  {id:'a1g3',skill:'gram',topic:'hay',q:'En mi calle ___ dos cafeterías.',o:['hay','están','son','tiene']},
+  {id:'a1g4',skill:'gram',topic:'Presente: правильные глаголы',q:'¿Dónde ___ tú? (vivir)',o:['vives','vive','vivo','vivís']},
+  {id:'a1g5',skill:'gram',topic:'gustar',q:'A mí me ___ las playas.',o:['gustan','gusta','gusto','gustas']},
+  {id:'a1g6',skill:'gram',topic:'Presente: ir',q:'Nosotros ___ al cine los viernes.',o:['vamos','van','vais','voy']},
+  {id:'a1g7',skill:'gram',topic:'согласование прилагательных',q:'Las habitaciones son muy ___.',o:['bonitas','bonitos','bonita','bonito']},
+  {id:'a1v1',skill:'vocab',topic:'время',ins:'Как сказать «15:30»?',q:'15:30',o:['Son las tres y media.','Es la tres y treinta.','Son las cinco menos media.','Es tres media.']},
+  {id:'a1v2',skill:'vocab',topic:'лексика: ресторан',ins:'Что попросить в ресторане, чтобы расплатиться?',q:'«Перед уходом я прошу…»',o:['la cuenta','la carta','la propina','la mesa']},
+  {id:'a1s1',skill:'sit',topic:'заказ в кафе',ins:'Вы в кафе и хотите заказать кофе с молоком. Что вы скажете?',q:'В кафе',o:['¿Me pone un café con leche, por favor?','¿Me pongo un café con leche?','¿Tienes tú café con leche a mí?','Yo quiero a café con leche.']},
+  {id:'a1s2',skill:'sit',topic:'спросить, где что находится',ins:'Вам нужно найти туалет. Что вы спросите?',q:'В ресторане',o:['Perdone, ¿dónde están los servicios?','Perdone, ¿qué son los servicios?','Perdone, ¿cuándo está el baño?','Perdone, ¿dónde es los baños?']},
+  {id:'a1r1',skill:'read',topic:'чтение: цены и условия',p:'a1r',q:'Сколько стоит одна ночь в двухместном номере с завтраком для двоих?',o:['76 €','68 €','60 €','52 €']},
+  {id:'a1r2',skill:'read',topic:'чтение: расписание',p:'a1r',q:'Можно ли заселиться в 2 часа ночи?',o:['Да, ресепшен работает круглосуточно','Нет, ресепшен закрыт ночью','Только до 20:00','В тексте об этом не сказано']},
+  {id:'a1l1',skill:'listen',topic:'аудирование: о себе',p:'a1l',q:'Где живёт Марта?',o:['В Мадриде','В Валенсии','В Барселоне','В отеле']},
+  {id:'a1l2',skill:'listen',topic:'аудирование: о себе',p:'a1l',q:'Что Марта делает по выходным?',o:['Учит английский','Работает в отеле','Ездит в Валенсию','Учит испанский']}
+ ],
+ A2:[
+  {id:'a2g1',skill:'gram',topic:'Pretérito Indefinido',q:'Ayer ___ a la playa con mis amigos.',o:['fui','iba','he ido','voy']},
+  {id:'a2g2',skill:'gram',topic:'Pretérito Perfecto',q:'Este año ___ a México dos veces.',o:['hemos viajado','viajábamos','hemos viajando','habemos viajado']},
+  {id:'a2g3',skill:'gram',topic:'Pretérito Imperfecto',q:'Cuando era pequeña, normalmente ___ con mi abuela los domingos.',o:['comía','comí','he comido','comeré']},
+  {id:'a2g4',skill:'gram',topic:'ir a + инфинитив',q:'Mañana ___ visitar el Museo del Prado.',o:['voy a','voy','voy de','iré a']},
+  {id:'a2g5',skill:'gram',topic:'местоимения (прямое дополнение)',q:'¿Y las maletas? — ___ he dejado en el coche.',o:['Las','Les','Los','Le']},
+  {id:'a2g6',skill:'gram',topic:'сравнение',q:'El tren es ___ rápido ___ el autobús.',o:['más … que','más … de','tan … que','mucho … como']},
+  {id:'a2g7',skill:'gram',topic:'Imperativo (tú)',q:'Para llegar a la plaza, ___ la segunda calle a la derecha.',o:['toma','tomas','tomaste','tomar']},
+  {id:'a2v1',skill:'vocab',topic:'лексика: отель',ins:'Как сказать «Я хочу забронировать номер»?',q:'В отеле',o:['Quiero reservar una habitación.','Quiero reversar una habitación.','Quiero recordar una habitación.','Quiero rellenar una habitación.']},
+  {id:'a2v2',skill:'vocab',topic:'лексика: транспорт',ins:'Что значит слово?',q:'el andén',o:['платформа','багаж','посадочный талон','касса']},
+  {id:'a2s1',skill:'sit',topic:'решить проблему в отеле',ins:'В вашем номере не работает кондиционер. Что вы скажете на ресепшене?',q:'Проблема в номере',o:['Perdone, el aire acondicionado de mi habitación no funciona.','Perdone, mi habitación no trabaja el aire.','Perdone, el aire acondicionado está roto de mí.','Perdone, ¿no funciona usted el aire?']},
+  {id:'a2s2',skill:'sit',topic:'уточнить меню',ins:'Вы хотите узнать, есть ли в ресторане вегетарианские блюда.',q:'В ресторане',o:['¿Tienen platos vegetarianos?','¿Son vegetarianos los platos de mí?','¿Hay plato vegetariana?','¿Están vegetarianos?']},
+  {id:'a2r1',skill:'read',topic:'чтение: инструкции',p:'a2r',q:'Где лежат ключи?',o:['В коробке у двери','У соседа','В холодильнике','У Лусии']},
+  {id:'a2r2',skill:'read',topic:'чтение: правила',p:'a2r',q:'О чём просит Лусия?',o:['Не оставлять мусор на балконе','Не пользоваться wifi','Выбросить мусор в воскресенье','Оставить ключи в холодильнике']},
+  {id:'a2r3',skill:'read',topic:'чтение: детали',p:'a2r',q:'Когда нужно освободить квартиру?',o:['В воскресенье до 11:00','В воскресенье после 11:00','В субботу до 11:00','В любое время в воскресенье']},
+  {id:'a2l1',skill:'listen',topic:'аудирование: объявление',p:'a2l',q:'Во сколько теперь отправится поезд?',o:['В 10:35','В 10:15','В 10:20','В 10:45']},
+  {id:'a2l2',skill:'listen',topic:'аудирование: объявление',p:'a2l',q:'С какого пути?',o:['С 4-го','С 14-го','С 2-го','С 10-го']}
+ ],
+ B1:[
+  {id:'b1g1',skill:'gram',topic:'Subjuntivo: пожелание',q:'Espero que ___ un buen viaje.',o:['tengas','tienes','tendrás','tuvieras']},
+  {id:'b1g2',skill:'gram',topic:'cuando + subjuntivo (будущее)',q:'Cuando ___ a Buenos Aires, te llamaré.',o:['llegue','llego','llegaré','llegaría']},
+  {id:'b1g3',skill:'gram',topic:'Indefinido vs Imperfecto в рассказе',q:'___ por el centro cuando ___ a un viejo amigo.',o:['Paseaba … vi','Paseé … veía','He paseado … veía','Pasearía … vi']},
+  {id:'b1g4',skill:'gram',topic:'Condicional: вежливость',q:'¿___ decirme dónde está la estación, por favor?',o:['Podría','Podré','Pude','Pueda']},
+  {id:'b1g5',skill:'gram',topic:'Pretérito Pluscuamperfecto',q:'Cuando llegamos al aeropuerto, el avión ya ___.',o:['había salido','salía','ha salido','saldría']},
+  {id:'b1g6',skill:'gram',topic:'por / para',q:'Gracias ___ todo. Este regalo es ___ ti.',o:['por … para','para … por','por … por','para … para']},
+  {id:'b1g7',skill:'gram',topic:'Subjuntivo: совет',q:'Te recomiendo que ___ el tren: es más barato.',o:['tomes','tomas','tomarás','tomar']},
+  {id:'b1g8',skill:'gram',topic:'ser для событий',q:'El concierto ___ en el estadio.',o:['es','está','hay','tiene']},
+  {id:'b1v1',skill:'vocab',topic:'лексика: перелёт',ins:'Что значит выражение?',q:'hacer escala',o:['делать пересадку','делать фото','стоять в очереди','делать заказ']},
+  {id:'b1v2',skill:'vocab',topic:'лексика: деньги и покупки',ins:'Что значит фраза?',q:'Me han cobrado de más.',o:['С меня взяли лишние деньги.','Мне вернули деньги.','Мне сделали скидку.','Мне не дали сдачу.']},
+  {id:'b1s1',skill:'sit',topic:'жалоба: потерянный багаж',ins:'Ваш чемодан не прилетел. Что вы скажете сотруднику аэропорта?',q:'В аэропорту',o:['Mi maleta no ha llegado. ¿Dónde puedo poner una reclamación?','Mi maleta no ha venido. ¿Dónde puedo hacer una queja de ella?','Mi maleta no llegó a mí. ¿Dónde pongo un reclamo de perder?','Mi maleta está perdida de vosotros. ¿Dónde reclamo yo?']},
+  {id:'b1s2',skill:'sit',topic:'вежливый отказ',ins:'Друг спрашивает: «¿Vienes a la fiesta esta noche?» Вы не можете, но хотите ответить вежливо.',q:'Приглашение',o:['Me encantaría, pero ya tengo planes. ¡Quizás la próxima vez!','No me gusta tu fiesta. Adiós.','Me encantaría, pero ya tengo plan de mí.','Encantaría, pero tengo planes ya hecho.']},
+  {id:'b1r1',skill:'read',topic:'чтение: основная мысль',p:'b1r',q:'На что прежде всего жалуются жители?',o:['На рост цен на аренду','На шум по ночам','На грязь на улицах','На то, что туристы не говорят по-испански']},
+  {id:'b1r2',skill:'read',topic:'чтение: детали и вывод',p:'b1r',q:'Какое решение приняли некоторые мэрии?',o:['Ограничить туристические квартиры','Запретить въезд туристам','Ввести налог для туристов','Закрыть пляжи']},
+  {id:'b1l1',skill:'listen',topic:'аудирование: голосовое сообщение',p:'b1l',q:'Что изменилось?',o:['Время вылета','Дата вылета','Авиакомпания','Цена билета']},
+  {id:'b1l2',skill:'listen',topic:'аудирование: голосовое сообщение',p:'b1l',q:'Что предлагают, если новое время не подходит?',o:['Бесплатно перенести на пятницу','Вернуть деньги','Поехать на поезде','Доплатить и улететь в среду']},
+  {id:'b1l3',skill:'listen',topic:'аудирование: голосовое сообщение',p:'b1l',q:'До какого дня нужно перезвонить?',o:['До среды','До четверга','До пятницы','До понедельника']}
+ ]
+};
+const LEVELS=['A1','A2','B1'];
+
+/* ================== ПИСЬМО ================== */
+const WRITING={
+ A1:{t:'Напишите 3–5 предложений о себе по-испански: как вас зовут, где вы живёте, чем занимаетесь и что любите делать.',min:20},
+ A2:{t:'Вы сняли квартиру в Испании. Напишите хозяину сообщение (5–7 предложений): поздоровайтесь, представьтесь, скажите, когда и как приезжаете, и задайте 2 вопроса о квартире.',min:40},
+ B1:{t:'Напишите отзыв о поездке (7–10 предложений): где вы были, что понравилось и что нет, что случилось интересного и что вы посоветуете другим путешественникам.',min:70}
+};
+
+/* ================== УСТНАЯ ЧАСТЬ ================== */
+const ORAL=[
+ {lvl:'A1',t:'Знакомство',task:'Представьтесь: как вас зовут, откуда вы, чем занимаетесь и зачем учите испанский.',role:'Задайте 2–3 вопроса: ¿Dónde vives? ¿Qué te gusta hacer? ¿Tienes hermanos?'},
+ {lvl:'A1',t:'В кафе',task:'Закажите напиток и что-нибудь поесть. Спросите, сколько это стоит.',role:'Вы официант(ка): уточните размер, предложите десерт, назовите цену.'},
+ {lvl:'A2',t:'Проблема в отеле',task:'Вы бронировали номер с видом на море, а вам дали номер окнами во двор. Объясните ситуацию и попросите решить проблему.',role:'Вы администратор: сначала говорите, что свободных номеров нет.'},
+ {lvl:'A2',t:'Как пройти?',task:'Спросите у прохожего, как дойти до вокзала. Уточните, далеко ли это и можно ли доехать на автобусе.',role:'Объясняйте дорогу с 2–3 поворотами, проверьте, понял(а) ли ученик.'},
+ {lvl:'A2',t:'Прошлые выходные',task:'Расскажите о последней поездке или о прошлых выходных: где были, что делали, что понравилось.',role:'Спрашивайте в прошедшем времени: ¿Qué comiste? ¿Con quién fuiste?'},
+ {lvl:'B1',t:'Отменённый рейс',task:'Ваш рейс отменили. Узнайте, какие есть варианты, и добейтесь компенсации или бесплатного отеля.',role:'Сотрудник авиакомпании: сначала предлагайте неудобные варианты.'},
+ {lvl:'B1',t:'Ваше мнение',task:'Как лучше путешествовать: самостоятельно или с турагентством? Выскажите мнение и аргументируйте.',role:'Возражайте, просите привести пример из опыта.'},
+ {lvl:'B1',t:'Место, которое впечатлило',task:'Расскажите о месте, которое вас впечатлило. Почему? Посоветовали бы его другим?',role:'Уточняйте детали: ¿Qué harías diferente? ¿Volverías?'}
+];
+const ORAL_RATE=['0 · не справился(лась)','1 · с большой помощью','2 · справился(лась) с ошибками','3 · уверенно'];
+const ORAL_CRIT=[['flu','Беглость'],['acc','Грамматическая точность'],['voc','Словарный запас'],['pron','Произношение'],['comp','Понимание собеседника']];
+
+/* ================== СОСТОЯНИЕ ================== */
+const fresh=()=>({v:1,screen:'intro',page:0,answers:{},self:{},test:{stage:0,idx:0,res:{},order:{},plays:{},stageShown:{}},writing:{text:'',paste:0},times:{},sent:false,oral:{rates:{},notes:{},crit:{},comment:'',name:''}});
+let S=fresh();
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S))}catch(e){}}
+function loadSaved(){try{const v=localStorage.getItem(LS_KEY);return v?JSON.parse(v):null}catch(e){return null}}
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=o=>Array.isArray(o)?{k:o[0],l:o[1]}:{k:o,l:o};
+const goalLabel=k=>{const g=GOALS.find(x=>x[0]===k);return g?g[1]:k};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2600)}
+function stamp(k){if(!S.times[k])S.times[k]=Date.now()}
+function shuffle(n){const a=[...Array(n).keys()];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function setProgress(p,label){$('#bar>i').style.width=Math.round(p*100)+'%';$('#secLabel').textContent=label||''}
+function go(screen){S.screen=screen;save();render();window.scrollTo({top:0,behavior:'smooth'})}
+
+/* ================== РЕНДЕР ================== */
+function render(){
+ ({intro:rIntro,portrait:rPortrait,self:rSelf,test:rTest,stageDone:rStageDone,writing:rWriting,results:rResults,oral:rOral}[S.screen]||rIntro)();
+}
+
+function rIntro(){
+ setProgress(0,'');
+ const saved=loadSaved();
+ const canResume=saved&&saved.screen&&saved.screen!=='intro'&&saved.screen!=='oral';
+ app.innerHTML=`<div class="card">
+  <div class="kicker">Диагностика · ~30 минут</div>
+  <h1>Mi mapa del español</h1>
+  <p>Это не экзамен. Мы вместе составим вашу карту испанского: зачем он вам, как вам удобно учиться и что вы уже умеете. По результатам преподаватель соберёт <b>персональную программу</b> именно под вас.</p>
+  <div class="steps">
+   <div class="step"><div class="n">1</div><div><b>Расскажите о себе</b><br><span class="muted small">Цели, ситуации, любимые форматы. ~10 мин</span></div></div>
+   <div class="step"><div class="n">2</div><div><b>Оцените себя</b><br><span class="muted small">Что, по-вашему, вы уже умеете. ~3 мин</span></div></div>
+   <div class="step"><div class="n">3</div><div><b>Проверьте уровень</b><br><span class="muted small">Задания подстраиваются под вас + короткий текст. ~15–20 мин</span></div></div>
+  </div>
+  <div class="note blue">💡 Если не знаете ответ, нажимайте <b>«Не знаю»</b>, не угадывайте. И, пожалуйста, без переводчиков и словарей: так программа получится точнее.</div>
+  <p class="small muted">Прогресс сохраняется в этом браузере: можно прерваться и вернуться позже.</p>
+  <div class="nav">
+   ${canResume?`<button class="btn ghost" id="restart">Начать заново</button><button class="btn" id="resume">Продолжить с места остановки →</button>`:`<span></span><button class="btn" id="start">Начать →</button>`}
+  </div>
+ </div>
+ <div style="text-align:center"><button class="linkbtn" id="toOral">Режим преподавателя: устная часть</button></div>`;
+ if(canResume){
+  $('#resume').onclick=()=>{S=Object.assign(fresh(),saved);render()};
+  $('#restart').onclick=()=>{if(confirm('Начать заново? Все ответы будут удалены.')){S=fresh();stamp('start');go('portrait')}};
+ }else $('#start').onclick=()=>{S=fresh();stamp('start');go('portrait')};
+ $('#toOral').onclick=()=>{if(canResume)S=Object.assign(fresh(),saved);go('oral')};
+}
+
+/* ---------- Портрет ---------- */
+function visibleQs(page){return page.qs.filter(q=>!q.showIf||q.showIf(S.answers))}
+function qHTML(q){
+ const a=S.answers[q.id];
+ const opt=q.optional?'<span class="opt-tag">необязательно</span>':'';
+ const title=q.q?`<div class="q-title">${esc(q.q)}${opt}</div>`:'';
+ const hint=q.hint?`<div class="q-hint">${esc(q.hint)}</div>`:'';
+ let body='';
+ if(q.type==='text')body=`<input type="text" data-in="${q.id}" value="${esc(a||'')}" placeholder="${esc(q.ph||'')}" maxlength="200">`;
+ else if(q.type==='textarea')body=`<textarea data-in="${q.id}" maxlength="1500" placeholder="${esc(q.ph||'')}">${esc(a||'')}</textarea>`;
+ else if(q.type==='single'||q.type==='multi'){
+  let opts=q.opts;
+  if(q.dyn)opts=(S.answers[q.dyn]||[]).map(k=>[k,goalLabel(k)]);
+  body=`<div class="opts">${opts.map(o=>{const n=norm(o);const sel=q.type==='multi'?(a||[]).includes(n.k):a===n.k;return `<button type="button" class="opt ${sel?'sel':''}" data-q="${q.id}" data-k="${esc(n.k)}">${esc(n.l)}</button>`}).join('')}</div>`;
+ }
+ else if(q.type==='bipolar')body=`<div class="bip"><div class="l">${esc(q.left)}</div><div class="dots">${[1,2,3,4,5].map(v=>`<button type="button" class="dot ${a===v?'sel':''}" data-bip="${q.id}" data-v="${v}" aria-label="${v}"></button>`).join('')}</div><div class="r">${esc(q.right)}</div></div>`;
+ else if(q.type==='scale10')body=`<div class="scale10">${[1,2,3,4,5,6,7,8,9,10].map(v=>`<button type="button" class="opt ${a===v?'sel':''}" data-sc="${q.id}" data-v="${v}">${v}</button>`).join('')}</div>`;
+ return `<div class="q" id="q_${q.id}">${title}${hint}${body}</div>`;
+}
+function rPortrait(){
+ stamp('portrait');
+ const page=PAGES[S.page];
+ setProgress(.02+.33*(S.page/PAGES.length),`Часть 1 · ${S.page+1} из ${PAGES.length}`);
+ app.innerHTML=`<div class="card"><div class="kicker">Расскажите о себе</div><h2>${esc(page.title)}</h2>${page.sub?`<p class="muted small">${esc(page.sub)}</p>`:''}<div style="margin-top:18px">${visibleQs(page).map(qHTML).join('')}</div></div>
+ <div class="nav"><button class="btn ghost" id="back">← Назад</button><button class="btn" id="next">Дальше →</button></div>`;
+ bindPortrait(page);
+}
+function bindPortrait(page){
+ app.querySelectorAll('[data-in]').forEach(el=>el.addEventListener('input',()=>{S.answers[el.dataset.in]=el.value;save()}));
+ app.querySelectorAll('.opt[data-q]').forEach(el=>el.onclick=()=>{
+  const q=page.qs.find(x=>x.id===el.dataset.q),k=el.dataset.k;
+  if(q.type==='multi'){
+   let arr=S.answers[q.id]||[];
+   if(arr.includes(k))arr=arr.filter(x=>x!==k);
+   else{if(q.max&&arr.length>=q.max){toast(`Можно выбрать не больше ${q.max}`);return}arr=[...arr,k]}
+   S.answers[q.id]=arr;
+   if(q.id==='goals'&&S.answers.mainGoal&&!arr.includes(S.answers.mainGoal))delete S.answers.mainGoal;
+  }else S.answers[q.id]=k;
+  save();const y=window.scrollY;rPortrait();window.scrollTo(0,y);
+ });
+ app.querySelectorAll('[data-bip]').forEach(el=>el.onclick=()=>{S.answers[el.dataset.bip]=+el.dataset.v;save();app.querySelectorAll(`[data-bip="${el.dataset.bip}"]`).forEach(d=>d.classList.toggle('sel',d===el));$('#q_'+el.dataset.bip).classList.remove('err')});
+ app.querySelectorAll('[data-sc]').forEach(el=>el.onclick=()=>{S.answers[el.dataset.sc]=+el.dataset.v;save();app.querySelectorAll(`[data-sc="${el.dataset.sc}"]`).forEach(d=>d.classList.toggle('sel',d===el));$('#q_'+el.dataset.sc).classList.remove('err')});
+ $('#back').onclick=()=>{if(S.page>0){S.page--;go('portrait')}else go('intro')};
+ $('#next').onclick=()=>{
+  let bad=null;
+  visibleQs(page).forEach(q=>{
+   const a=S.answers[q.id];
+   const empty=a==null||(typeof a==='string'&&!a.trim())||(Array.isArray(a)&&!a.length);
+   const el=$('#q_'+q.id);el.classList.toggle('err',!q.optional&&empty);
+   if(!q.optional&&empty&&!bad)bad=el;
+  });
+  if(bad){toast('Ответьте, пожалуйста, на отмеченные вопросы');bad.scrollIntoView({behavior:'smooth',block:'center'});return}
+  if(page.qs.some(q=>q.id==='goals')){const g=S.answers.goals||[];if(g.length===1)S.answers.mainGoal=g[0]}
+  if(S.page<PAGES.length-1){S.page++;go('portrait')}else go('self');
+ };
+}
+
+/* ---------- Самооценка ---------- */
+function rSelf(){
+ stamp('self');
+ setProgress(.36,'Часть 2 · Самооценка');
+ app.innerHTML=`<div class="card"><div class="kicker">Оцените себя</div><h2>Что вы уже умеете?</h2><p class="muted small">Отвечайте по ощущениям, правильных ответов здесь нет. Потом мы сравним самооценку с результатами заданий.</p>
+ ${SELF.map(g=>`<div class="sa-group"><h3><span>${g.ic}</span>${esc(g.t)}</h3>${g.items.map((it,i)=>{const id=g.k+i,v=S.self[id];return `<div class="sa-item" id="sa_${id}"><p>${esc(it)}</p><div class="seg">${SELF_SCALE.map((s,j)=>`<button type="button" class="opt ${v===j?'sel':''}" data-sa="${id}" data-v="${j}">${s}</button>`).join('')}</div></div>`}).join('')}</div>`).join('')}
+ <div class="q"><div class="q-title">Какой у вас уровень, как вам кажется?</div><div class="opts">${['Не знаю','A0 — с нуля','A1','A2','B1','B2 и выше'].map(l=>`<button type="button" class="opt ${S.answers.selfLevel===l?'sel':''}" data-lvl="${l}">${l}</button>`).join('')}</div></div>
+ </div>
+ <div class="nav"><button class="btn ghost" id="back">← Назад</button><button class="btn" id="next">К заданиям →</button></div>`;
+ app.querySelectorAll('[data-sa]').forEach(el=>el.onclick=()=>{S.self[el.dataset.sa]=+el.dataset.v;save();app.querySelectorAll(`[data-sa="${el.dataset.sa}"]`).forEach(d=>d.classList.toggle('sel',d===el));$('#sa_'+el.dataset.sa).style.background=''});
+ app.querySelectorAll('[data-lvl]').forEach(el=>el.onclick=()=>{S.answers.selfLevel=el.dataset.lvl;save();app.querySelectorAll('[data-lvl]').forEach(d=>d.classList.toggle('sel',d===el))});
+ $('#back').onclick=()=>{S.page=PAGES.length-1;go('portrait')};
+ $('#next').onclick=()=>{
+  const miss=[];SELF.forEach(g=>g.items.forEach((_,i)=>{if(S.self[g.k+i]==null)miss.push(g.k+i)}));
+  if(miss.length){miss.forEach(id=>$('#sa_'+id).style.background='var(--bad-l)');$('#sa_'+miss[0]).scrollIntoView({behavior:'smooth',block:'center'});toast('Отметьте все утверждения');return}
+  if(!S.answers.selfLevel)S.answers.selfLevel='Не знаю';
+  go('test');
+ };
+}
+
+/* ---------- Тест ---------- */
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices()}catch(e){voices=[]}}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function esVoice(){return voices.find(v=>/^es[-_]ES/i.test(v.lang))||voices.find(v=>/^es/i.test(v.lang))}
+function speak(text,rate,onend){
+ try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=esVoice();if(v)u.voice=v;u.lang=v?v.lang:'es-ES';u.rate=rate||.9;u.onend=onend;u.onerror=onend;speechSynthesis.speak(u)}catch(e){onend&&onend()}
+}
+let pendingAnswer=null;
+function curItem(){return BANK[LEVELS[S.test.stage]][S.test.idx]}
+function rTest(){
+ stamp('test');
+ const lvl=LEVELS[S.test.stage],items=BANK[lvl],it=curItem();
+ const doneBefore=LEVELS.slice(0,S.test.stage).reduce((s,l)=>s+BANK[l].length,0);
+ const totalPossible=LEVELS.reduce((s,l)=>s+BANK[l].length,0);
+ setProgress(.42+.45*((doneBefore+S.test.idx)/totalPossible),`Часть 3 · блок ${S.test.stage+1} · ${S.test.idx+1}/${items.length}`);
+ if(!S.test.order[it.id]){S.test.order[it.id]=shuffle(it.o.length);save()}
+ const ord=S.test.order[it.id];
+ const prev=S.test.res[it.id];
+ pendingAnswer=prev?prev.choice:null;
+ let ctx='';
+ if(it.p){const P=PASSAGES[it.p];
+  if(P.type==='read')ctx=`<div class="passage"><div class="pt">${esc(P.title)}</div>${P.text}</div>`;
+  else{const left=2-(S.test.plays[it.p]||0);const ok='speechSynthesis' in window;
+   ctx=`<div class="audio"><button class="play" id="play" ${left<=0||!ok?'disabled':''} aria-label="Слушать">▶</button><div><b>Прослушайте запись</b><div class="small">${ok?`Можно прослушать ещё ${left} раз(а)`:'Ваш браузер не умеет озвучивать текст. Откройте тест в Chrome или Safari, либо нажмите «Не знаю».'}</div>${ok&&!esVoice()?'<div class="small muted">Испанский голос не найден, озвучка может звучать с акцентом.</div>':''}</div></div>`}
+ }
+ const isSpanishQ=it.skill==='gram'||(it.skill==='vocab'&&!/[а-я]/i.test(it.q));
+ app.innerHTML=`<div class="card">
+  <div class="kicker">${SKILLS[it.skill]}</div>
+  ${ctx}
+  ${it.ins?`<div class="test-ins">${esc(it.ins)}</div>`:(it.skill==='gram'?'<div class="test-ins">Выберите правильный вариант</div>':'')}
+  <div class="test-q" ${isSpanishQ?'lang="es"':''}>${esc(it.q)}</div>
+  <div class="opts col">${ord.map(i=>`<button type="button" class="opt ${pendingAnswer===i?'sel':''}" data-ans="${i}" lang="es">${esc(it.o[i])}</button>`).join('')}</div>
+  <div class="nose opts"><button type="button" class="opt ${pendingAnswer==='nose'?'sel':''}" data-ans="nose">🤷 Не знаю</button></div>
+ </div>
+ <div class="nav"><span></span><button class="btn" id="next" ${pendingAnswer==null?'disabled':''}>Дальше →</button></div>`;
+ app.querySelectorAll('[data-ans]').forEach(el=>el.onclick=()=>{pendingAnswer=el.dataset.ans==='nose'?'nose':+el.dataset.ans;app.querySelectorAll('[data-ans]').forEach(d=>d.classList.toggle('sel',d===el));$('#next').disabled=false});
+ const pl=$('#play');
+ if(pl)pl.onclick=()=>{const P=PASSAGES[it.p];S.test.plays[it.p]=(S.test.plays[it.p]||0)+1;save();pl.disabled=true;pl.textContent='♪';
+  speak(P.text,P.rate,()=>{const y=window.scrollY;rTest();window.scrollTo(0,y)})};
+ $('#next').onclick=()=>{
+  if(pendingAnswer==null)return;
+  try{speechSynthesis.cancel()}catch(e){}
+  S.test.res[it.id]={choice:pendingAnswer,ok:pendingAnswer===0,lvl,skill:it.skill};
+  if(S.test.idx<items.length-1){S.test.idx++;save();rTest();window.scrollTo({top:0,behavior:'smooth'})}
+  else{const r=stageStats(lvl);
+   if(r.ratio>=PASS_RATIO&&S.test.stage<LEVELS.length-1){go('stageDone')}
+   else{S.test.finished=true;go('writing')}
+  }
+ };
+}
+function rStageDone(){
+ setProgress(.42+.45*(LEVELS.slice(0,S.test.stage+1).reduce((s,l)=>s+BANK[l].length,0)/LEVELS.reduce((s,l)=>s+BANK[l].length,0)),'Часть 3');
+ app.innerHTML=`<div class="card hero"><div style="font-size:3rem">🌟</div><h2>¡Muy bien!</h2><p>Вы отлично справились с этим блоком. Дальше задания будут немного сложнее. Если что-то незнакомо, смело нажимайте «Не знаю».</p><button class="btn" id="go">Следующий блок →</button></div>`;
+ $('#go').onclick=()=>{S.test.stage++;S.test.idx=0;go('test')};
+}
+function stageStats(lvl){const items=BANK[lvl];let ans=0,cor=0,nose=0;items.forEach(it=>{const r=S.test.res[it.id];if(r){ans++;if(r.ok)cor++;if(r.choice==='nose')nose++}});return{reached:ans>0,total:items.length,ans,cor,nose,ratio:items.length?cor/items.length:0}}
+function maxStage(){let m=0;LEVELS.forEach((l,i)=>{if(stageStats(l).reached)m=i});return m}
+
+/* ---------- Письмо ---------- */
+function rWriting(){
+ stamp('writing');
+ setProgress(.9,'Часть 3 · Письмо');
+ const lvl=LEVELS[maxStage()],W=WRITING[lvl];
+ const wc=t=>(t.trim().match(/\S+/g)||[]).length;
+ app.innerHTML=`<div class="card"><div class="kicker">Последнее задание</div><h2>Напишите небольшой текст</h2>
+  <div class="note blue">${esc(W.t)}</div>
+  <p class="small muted">Пишите сами, без переводчика: ошибки — это нормально, по ним преподаватель поймёт, что важно разобрать. Ориентир: от ${W.min} слов.</p>
+  <textarea id="wr" lang="es" style="min-height:200px" placeholder="Escribe aquí…">${esc(S.writing.text)}</textarea>
+  <div class="counter" id="wc"></div>
+ </div>
+ <div class="nav"><button class="linkbtn" id="skip">Пропустить</button><button class="btn" id="next">Получить результаты →</button></div>`;
+ const ta=$('#wr'),upd=()=>{const n=wc(ta.value);$('#wc').textContent=`Слов: ${n}`;S.writing.text=ta.value;S.writing.words=n;S.writing.lvl=lvl;save()};upd();
+ ta.addEventListener('input',upd);
+ ta.addEventListener('paste',()=>{S.writing.paste=(S.writing.paste||0)+1;save()});
+ const finish=()=>{stamp('end');go('results')};
+ $('#next').onclick=()=>{if(wc(ta.value)<Math.round(W.min/2)&&!confirm('Текст получился совсем коротким. Всё равно перейти к результатам?'))return;finish()};
+ $('#skip').onclick=()=>{if(confirm('Пропустить письменное задание?')){S.writing.skipped=true;finish()}};
+}
+
+/* ================== АНАЛИЗ ================== */
+function analyze(){
+ const st={};LEVELS.forEach(l=>st[l]=stageStats(l));
+ const r1=st.A1.ratio,r2=st.A2.ratio,r3=st.B1.ratio;
+ let level,levelNote;
+ if(r1<.4){level='A0–A1';levelNote='Начальный этап: фундамент только закладывается'}
+ else if(r1<PASS_RATIO){level='A1';levelNote='A1 в процессе освоения'}
+ else if(!st.A2.reached||r2<.4){level='A1';levelNote='Уверенный A1, впереди переход к A2'}
+ else if(r2<PASS_RATIO){level='A1+ / A2';levelNote='A2 в процессе освоения'}
+ else if(!st.B1.reached||r3<.4){level='A2';levelNote='Уверенный A2, впереди переход к B1'}
+ else if(r3<PASS_RATIO){level='A2+ / B1';levelNote='B1 в процессе освоения'}
+ else if(r3<.85){level='B1';levelNote='Уверенный B1'}
+ else{level='B1+';levelNote='B1 и выше, стоит проверить уровень B2 на уроке'}
+ // навыки по тесту: среднее по уровням A1/A2/B1 (недостигнутые уровни = 0)
+ const test={};
+ Object.keys(SKILLS).forEach(k=>{let sum=0;LEVELS.forEach(l=>{const its=BANK[l].filter(i=>i.skill===k);const c=its.filter(i=>S.test.res[i.id]&&S.test.res[i.id].ok).length;sum+=its.length?c/its.length:0});test[k]=Math.round(sum/LEVELS.length*100)});
+ const selfS={};SELF.forEach(g=>{let s=0;g.items.forEach((_,i)=>s+=(S.self[g.k+i]||0));selfS[g.k]=Math.round(s/9*100)});
+ const map={listen:'listen',read:'read',sit:'speak',gram:'gram',vocab:'vocab'};
+ const axes=['listen','read','sit','gram','vocab'];
+ const gaps=axes.map(k=>selfS[map[k]]-test[k]);
+ const avgGap=Math.round(gaps.reduce((a,b)=>a+b,0)/gaps.length);
+ // темы
+ const answered=[];LEVELS.forEach((l,li)=>BANK[l].forEach(it=>{const r=S.test.res[it.id];if(r)answered.push({it,r,li})}));
+ const uniq=(arr)=>{const seen=new Set();return arr.filter(x=>{if(seen.has(x.it.topic))return false;seen.add(x.it.topic);return true})};
+ const strengths=uniq(answered.filter(x=>x.r.ok).sort((a,b)=>b.li-a.li)).slice(0,3);
+ const wrongAll=answered.filter(x=>!x.r.ok).sort((a,b)=>a.li-b.li);
+ const growth=uniq(wrongAll).slice(0,3);
+ const weakest=axes.slice().sort((a,b)=>test[a]-test[b])[0];
+ const strongest=axes.slice().sort((a,b)=>test[b]-test[a])[0];
+ return{st,level,levelNote,test,selfS,axes,map,avgGap,gaps,strengths,growth,weakest,strongest,answered,wrongAll};
+}
+
+/* ---------- Радар ---------- */
+function radar(labels,series){
+ const W=440,H=330,cx=220,cy=165,R=112,n=labels.length;
+ const pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/n;return[cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100]};
+ let g='';
+ [25,50,75,100].forEach(r=>{g+=`<polygon points="${labels.map((_,i)=>pt(i,r).join(',')).join(' ')}" fill="${r===100?'#FFFDF9':'none'}" stroke="#E8DDCD" stroke-width="1"/>`});
+ labels.forEach((l,i)=>{const[x,y]=pt(i,100);g+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E8DDCD"/>`;const[lx,ly]=pt(i,124);const anchor=Math.abs(lx-cx)<8?'middle':(lx>cx?'start':'end');g+=`<text x="${lx}" y="${ly+4}" text-anchor="${anchor}" font-family="Poppins" font-size="13" fill="#2B2620">${l}</text>`});
+ series.forEach(s=>{const pts=s.vals.map((v,i)=>pt(i,Math.max(v,3)).join(',')).join(' ');g+=`<polygon points="${pts}" fill="${s.fill}" stroke="${s.color}" stroke-width="2.5" ${s.dash?'stroke-dasharray="6 5"':''}/>`;s.vals.forEach((v,i)=>{const[x,y]=pt(i,Math.max(v,3));g+=`<circle cx="${x}" cy="${y}" r="3.5" fill="${s.color}"/>`})});
+ return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:460px" role="img" aria-label="Профиль навыков">${g}</svg>`;
+}
+
+/* ---------- Тексты для ученика ---------- */
+const GOAL_FOCUS={travel:'Для путешествий важнее всего быстро реагировать в живых ситуациях и понимать речь на слух: объявления, ответы официанта, объяснения дороги.',relocate:'Для переезда нужен прочный фундамент: бытовые ситуации, документы, общение с соседями и коллегами, понимание живой речи.',work:'Для работы важны точность, вежливые формулы, переписка и уверенность в разговоре.',exam:'Для экзамена нужны системная грамматика, все четыре навыка и привычка к формату заданий.',people:'Для общения с людьми главное — разговорная практика, живая лексика и понимание на слух.',culture:'Для фильмов, музыки и книг главное — понимание на слух, чтение и живая разговорная лексика.',study:'Для учёбы важны системная грамматика, чтение и письмо.',self:'Для себя лучше всего работают интересные темы и регулярность без стресса.'};
+const SKILL_ADVICE={listen:'больше слушать: короткие диалоги, видео и аудио в каждом занятии',read:'больше читать: короткие аутентичные тексты на ваши темы',sit:'больше разговорной практики: ролевые игры по вашим ситуациям',gram:'укрепить грамматическую базу через живые примеры, а не сухие правила',vocab:'расширять словарь по темам, которые важны именно вам'};
+const SKILL_NICE={listen:'Аудирование',read:'Чтение',sit:'Ситуации',gram:'Грамматика',vocab:'Лексика'};
+
+function rResults(){
+ setProgress(1,'Готово!');
+ const A=analyze(),a=S.answers;
+ const name=(a.name||'').trim();
+ let insight;
+ if(A.avgGap>15)insight='Вы оцениваете себя немного выше, чем показали задания. Это нормально: в тесте не было ни контекста, ни подсказок, ни жестов собеседника. Зато теперь точно видно, куда двигаться.';
+ else if(A.avgGap<-15)insight='Вы знаете больше, чем думаете! Задания показали результат выше вашей самооценки. Значит, главное для вас — уверенность и практика, база уже есть.';
+ else insight='Вы очень точно чувствуете свой уровень: самооценка почти совпала с результатами заданий. Это отличная основа для осознанного обучения.';
+ const goal=a.mainGoal||(a.goals||[])[0];
+ const vals=A.axes.map(k=>A.test[k]),selfVals=A.axes.map(k=>A.selfS[A.map[k]]);
+ app.innerHTML=`
+ <div class="card hero">
+  <div class="kicker">Ваша карта испанского</div>
+  <h1>${name?esc(name)+', ':''}¡enhorabuena!</h1>
+  <p class="muted">Ориентировочный уровень по заданиям</p>
+  <div class="level-badge">${A.level}</div>
+  <p>${esc(A.levelNote)}</p>
+  <p class="small muted">Это предварительная оценка. Точный уровень преподаватель уточнит после устной части и письменного задания.</p>
+ </div>
+ <div class="card">
+  <h2>Ваши навыки</h2>
+  <div class="radar-wrap">${radar(A.axes.map(k=>SKILL_NICE[k]),[{vals:selfVals,color:'#2E3A6E',fill:'rgba(46,58,110,.08)',dash:true},{vals,color:'#C65D3B',fill:'rgba(198,93,59,.22)'}])}</div>
+  <div class="legend"><span><i style="background:#C65D3B"></i>Результат заданий</span><span><i style="background:#2E3A6E"></i>Ваша самооценка</span></div>
+  <div class="note ${A.avgGap<-15?'green':'blue'}" style="margin-top:16px">${insight}</div>
+  <p class="small muted">«Ситуации» — это умение подобрать правильную фразу в живой ситуации. Говорение и письмо преподаватель оценит отдельно.</p>
+ </div>
+ <div class="two">
+  <div class="card"><h3>💪 Ваши сильные стороны</h3><ul class="list plus">${A.strengths.length?A.strengths.map(x=>`<li>${esc(x.it.topic)}</li>`).join(''):'<li>Смелость начать! Всё остальное построим вместе</li>'}</ul></div>
+  <div class="card"><h3>🌱 Зоны роста</h3><ul class="list grow">${A.growth.length?A.growth.map(x=>`<li>${esc(x.it.topic)}</li>`).join(''):'<li>Ошибок почти нет: пора браться за уровень B2</li>'}</ul></div>
+ </div>
+ <div class="card">
+  <h2>Что это значит для вашей цели</h2>
+  ${goal?`<p><b>Главная цель: ${esc(goalLabel(goal))}.</b> ${esc(GOAL_FOCUS[goal]||'')}</p>`:''}
+  <p>Самый сильный навык сейчас — <b>${SKILL_NICE[A.strongest].toLowerCase()}</b>. Больше всего пользы принесёт ${SKILL_ADVICE[A.weakest]}.</p>
+  ${(a.situations||[]).length?`<p class="small muted" style="margin-bottom:6px">Ситуации, с которых начнём:</p><div class="tags">${a.situations.map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>`:''}
+ </div>
+ <div class="card">
+  <h2>Что дальше?</h2>
+  <p>Ваши ответы уже у преподавателя. На их основе будет составлена <b>персональная программа</b>: темы, ситуации, формат уроков и домашних заданий под ваш ритм и интересы.</p>
+  <div class="send-status" id="sendStatus"></div>
+  <div class="nav noprint" style="margin-top:14px">
+   <button class="btn ghost sm" id="print">🖨 Сохранить / распечатать</button>
+   <button class="btn ghost sm" id="resend">Отправить ещё раз</button>
+  </div>
+ </div>
+ <div class="card noprint" style="background:transparent;border-style:dashed;box-shadow:none">
+  <div class="kicker">Для преподавателя</div>
+  <div class="nav" style="margin-top:6px">
+   <button class="btn indigo sm" id="toOral">🎤 Устная часть</button>
+   <button class="btn ghost sm" id="copy">Скопировать отчёт</button>
+   <button class="btn ghost sm" id="dl">Скачать отчёт .txt</button>
+   <button class="linkbtn" id="new">Новый ученик</button>
+  </div>
+ </div>`;
+ $('#print').onclick=()=>window.print();
+ $('#resend').onclick=()=>sendReport(true);
+ $('#copy').onclick=()=>copyText(buildReport(A));
+ $('#dl').onclick=()=>download(buildReport(A),`diagnostico_${(name||'alumno').replace(/\s+/g,'_')}.txt`);
+ $('#toOral').onclick=()=>go('oral');
+ $('#new').onclick=()=>{if(confirm('Очистить ответы и начать тест для нового ученика?')){S=fresh();save();go('intro')}};
+ if(!S.sent)sendReport(false);else $('#sendStatus').innerHTML='<span style="color:var(--ok)">✓ Результаты отправлены преподавателю</span>';
+}
+
+/* ================== ОТЧЁТ ДЛЯ ПРЕПОДАВАТЕЛЯ ================== */
+const mins=(a,b)=>a&&b?Math.max(1,Math.round((b-a)/60000))+' мин':'—';
+function fmtAns(q){
+ const a=S.answers[q.id];
+ if(a==null||a===''||(Array.isArray(a)&&!a.length))return '—';
+ if(q.type==='multi')return a.map(k=>q.id==='goals'?goalLabel(k):k).join('; ');
+ if(q.dyn||q.id==='mainGoal')return goalLabel(a);
+ if(q.type==='bipolar')return `${a}/5`;
+ if(q.type==='scale10')return a+'/10';
+ return String(a).replace(/\n+/g,' / ');
+}
+function buildReport(A){
+ A=A||analyze();const a=S.answers,t=S.times,L=[];
+ const name=(a.name||'—').trim();
+ L.push('📋 ДИАГНОСТИКА EspañolPro · Mi mapa del español');
+ L.push(`Ученик: ${name}`);
+ L.push(`Дата: ${new Date(t.end||Date.now()).toLocaleString('ru-RU')}`);
+ L.push(`Время: портрет ${mins(t.portrait,t.self)}, самооценка ${mins(t.self,t.test)}, тест ${mins(t.test,t.writing)}, письмо ${mins(t.writing,t.end)}, всего ${mins(t.start,t.end)}`);
+ L.push('');
+ L.push(`🎯 ИТОГ: ориентировочный уровень ${A.level} (${A.levelNote})`);
+ L.push(`Самооценка уровня: ${a.selfLevel||'—'}`);
+ L.push('');
+ L.push('━━━ 1. ПОРТРЕТ ━━━');
+ PAGES.forEach(p=>{L.push(`▸ ${p.title}`);p.qs.forEach(q=>{if(q.showIf&&!q.showIf(a)&&q.id!=='mainGoal')return;const label=q.q||`${q.left} (1) ↔ ${q.right} (5)`;L.push(`• ${label}: ${fmtAns(q)}`)})});
+ L.push('');
+ L.push('━━━ 2. САМООЦЕНКА (0 не могу · 1 с трудом · 2 в целом да · 3 легко) ━━━');
+ SELF.forEach(g=>{L.push(`${g.t}: A1=${S.self[g.k+0]??'—'}, A2=${S.self[g.k+1]??'—'}, B1=${S.self[g.k+2]??'—'} → ${A.selfS[g.k]}%`)});
+ L.push('');
+ L.push('━━━ 3. ТЕСТ ━━━');
+ LEVELS.forEach(l=>{const s=A.st[l];L.push(s.reached?`Блок ${l}: ${s.cor}/${s.total} верно (${Math.round(s.ratio*100)}%), «не знаю»: ${s.nose}`:`Блок ${l}: не проходил(а) (не достиг порога ${Math.round(PASS_RATIO*100)}% на предыдущем)`)});
+ L.push('');
+ L.push('Навыки: тест vs самооценка (шкала 0–100, A1+A2+B1)');
+ A.axes.forEach((k,i)=>{const gap=A.gaps[i];L.push(`• ${SKILL_NICE[k]}: тест ${A.test[k]} | самооценка ${A.selfS[A.map[k]]}${Math.abs(gap)>20?(gap>0?'  ⚠ переоценивает':'  ⚠ недооценивает'):''}`)});
+ L.push(`Средний разрыв самооценки: ${A.avgGap>0?'+':''}${A.avgGap} (${A.avgGap>15?'склонен(на) переоценивать':A.avgGap<-15?'склонен(на) недооценивать':'оценивает себя точно'})`);
+ const plays=Object.entries(S.test.plays).map(([k,v])=>`${k.toUpperCase()}: ${v}×`).join(', ');
+ L.push(`Прослушиваний аудио: ${plays||'—'}`);
+ L.push('');
+ L.push('Ошибки и «не знаю»:');
+ if(!A.wrongAll.length)L.push('— нет');
+ A.wrongAll.forEach(x=>{const ch=x.r.choice==='nose'?'«не знаю»':`«${x.it.o[x.r.choice]}»`;L.push(`✗ [${x.r.lvl} · ${SKILL_NICE[x.it.skill]} · ${x.it.topic}] ${x.it.ins?x.it.ins+' ':''}${x.it.q} → ${ch} (верно: «${x.it.o[0]}»)`)});
+ L.push('');
+ L.push('Верно решённые темы:');
+ const okTopics=[...new Set(A.answered.filter(x=>x.r.ok).map(x=>`${x.r.lvl} ${x.it.topic}`))];
+ L.push(okTopics.join('; ')||'—');
+ L.push('');
+ L.push(`━━━ 4. ПИСЬМО (задание уровня ${S.writing.lvl||'—'}) ━━━`);
+ if(S.writing.skipped&&!S.writing.text.trim())L.push('Пропущено');
+ else{L.push(`Задание: ${(WRITING[S.writing.lvl]||{}).t||''}`);L.push(`Слов: ${S.writing.words||0}${S.writing.paste?`  ⚠ была вставка текста (${S.writing.paste}×): возможно, использовался переводчик`:''}`);L.push('Текст:');L.push(S.writing.text.trim()||'—')}
+ L.push('');
+ const oral=buildOralBlock();
+ if(oral){L.push('━━━ 5. УСТНАЯ ЧАСТЬ ━━━');L.push(...oral);L.push('')}
+ L.push('━━━ СВОДКА ДЛЯ ПРОГРАММЫ ━━━');
+ L.push(`• Уровень: ${A.level}; самооценка ${A.avgGap>15?'выше':A.avgGap<-15?'ниже':'≈'} результата`);
+ L.push(`• Главная цель: ${a.mainGoal?goalLabel(a.mainGoal):'—'}; срок: ${a.deadline||'—'}${a.destination?'; '+a.destination:''}`);
+ L.push(`• Ключевые ситуации: ${(a.situations||[]).join('; ')||'—'}`);
+ L.push(`• Вариант испанского: ${a.variant||'—'}${a.variantText?' ('+a.variantText+')':''}`);
+ L.push(`• Сильное: ${A.strengths.map(x=>x.it.topic).join('; ')||'—'}`);
+ L.push(`• Пробелы: ${[...new Set(A.wrongAll.map(x=>x.it.topic))].slice(0,8).join('; ')||'—'}`);
+ L.push(`• Слабейший навык: ${SKILL_NICE[A.weakest]}; сильнейший: ${SKILL_NICE[A.strongest]}`);
+ L.push(`• Ритм: ${a.lessons||'—'} урок(а)/нед; самостоятельно: ${a.selfStudy||'—'}; ДЗ: ${a.homework||'—'}`);
+ L.push(`• Стиль: разговор↔структура ${a.b_talk||'—'}/5; явная грамматика↔контекст ${a.b_gram||'—'}/5; план↔гибкость ${a.b_plan||'—'}/5; темп ${a.b_pace||'—'}/5`);
+ L.push(`• Любимые форматы: ${(a.activities||[]).join('; ')||'—'}`);
+ L.push(`• Исправление ошибок: ${a.correction||'—'}`);
+ L.push(`• Трудности (сам/а называет): ${(a.difficulties||[]).join('; ')||'—'}`);
+ L.push(`• Интересы: ${(a.interests||[]).join('; ')||'—'}${a.interestsText?' | '+a.interestsText:''}`);
+ L.push(`• Мотивация: ${a.motivation||'—'}/10; критерий успеха: ${a.success||'—'}`);
+ L.push('');
+ L.push('→ Скопируйте отчёт целиком и отправьте Claude, чтобы составить персональную программу.');
+ return L.join('\n');
+}
+function buildOralBlock(){
+ const o=S.oral;if(!o)return null;
+ const rated=ORAL.map((c,i)=>({c,i,r:o.rates[i]})).filter(x=>x.r!=null);
+ const crit=ORAL_CRIT.filter(([k])=>o.crit[k]!=null);
+ if(!rated.length&&!crit.length&&!o.comment)return null;
+ const L=[];
+ rated.forEach(x=>L.push(`• [${x.c.lvl}] ${x.c.t}: ${ORAL_RATE[x.r]}${o.notes[x.i]?' — '+o.notes[x.i]:''}`));
+ if(crit.length)L.push('Критерии (1–5): '+crit.map(([k,l])=>`${l} ${o.crit[k]}`).join('; '));
+ if(o.comment)L.push('Комментарий: '+o.comment);
+ return L;
+}
+
+/* ---------- Отправка ---------- */
+async function tgSend(text){
+ const chunks=[];let cur='';
+ for(let line of text.split('\n')){
+  while(line.length>3500){if(cur){chunks.push(cur);cur=''}chunks.push(line.slice(0,3500));line=line.slice(3500)}
+  if((cur+line+'\n').length>3600){chunks.push(cur);cur=''}
+  cur+=line+'\n';
+ }
+ if(cur.trim())chunks.push(cur);
+ for(let i=0;i<chunks.length;i++){
+  const body={chat_id:TG_CHAT,text:(chunks.length>1?`[${i+1}/${chunks.length}]\n`:'')+chunks[i],disable_web_page_preview:true};
+  const r=await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error('Telegram '+r.status);
+ }
+}
+async function sendReport(manual){
+ const box=$('#sendStatus');if(box)box.textContent='Отправляю результаты преподавателю…';
+ try{await tgSend(buildReport());S.sent=true;save();if(box)box.innerHTML='<span style="color:var(--ok)">✓ Результаты отправлены преподавателю</span>';if(manual)toast('Отправлено')}
+ catch(e){if(box)box.innerHTML='<span style="color:var(--bad)">Не удалось отправить автоматически. Нажмите «Отправить ещё раз» или «Скопировать отчёт» и пришлите его преподавателю.</span>'}
+}
+function copyText(t){
+ const done=()=>toast('Отчёт скопирован');
+ if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,()=>fallback());else fallback();
+ function fallback(){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){toast('Не удалось скопировать')}ta.remove()}
+}
+function download(t,fn){const b=new Blob([t],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(b);const l=document.createElement('a');l.href=u;l.download=fn;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+
+/* ================== РЕЖИМ ПРЕПОДАВАТЕЛЯ ================== */
+function rOral(){
+ setProgress(0,'Режим преподавателя');
+ const o=S.oral;if(!o.name&&S.answers.name)o.name=S.answers.name;
+ const hasTest=!!S.times.end;
+ let lvlHint='';
+ if(hasTest){const A=analyze();lvlHint=`<div class="note blue">По тесту: <b>${A.level}</b>. Начните с карточек этого уровня, при необходимости спуститесь или поднимитесь на уровень.</div>`}
+ app.innerHTML=`<div class="card"><div class="kicker">Режим преподавателя</div><h2>🎤 Устная часть</h2>
+  <p class="small muted">Выберите 3–4 карточки по уровню ученика. «Показать ученику» открывает задание крупно, чтобы показать его через демонстрацию экрана. Оцените каждую карточку и общие критерии.</p>
+  <div class="q"><div class="q-title">Ученик</div><input type="text" id="oName" value="${esc(o.name||'')}" placeholder="Имя ученика"></div>
+  ${lvlHint}
+  ${ORAL.map((c,i)=>`<div class="oral-card"><div><span class="lv">${c.lvl}</span><b>${esc(c.t)}</b></div><p style="margin:6px 0 0">${esc(c.task)}</p><div class="role">🎭 ${esc(c.role)}</div>
+   <div class="rate">${ORAL_RATE.map((r,j)=>`<button type="button" class="opt ${o.rates[i]===j?'sel':''}" data-or="${i}" data-v="${j}">${r}</button>`).join('')}<button class="btn ghost sm" data-show="${i}">Показать ученику</button></div>
+   <input type="text" data-on="${i}" value="${esc(o.notes[i]||'')}" placeholder="Заметка: типичные ошибки, что удалось" style="margin-top:8px;font-size:.88rem;padding:8px 12px"></div>`).join('')}
+  <h3 style="margin-top:22px">Общие критерии</h3>
+  ${ORAL_CRIT.map(([k,l])=>`<div class="q" style="margin-bottom:12px"><div class="q-title" style="font-weight:500">${l}</div><div class="opts">${[1,2,3,4,5].map(v=>`<button type="button" class="opt ${o.crit[k]===v?'sel':''}" data-cr="${k}" data-v="${v}" style="width:46px;text-align:center">${v}</button>`).join('')}</div></div>`).join('')}
+  <div class="q"><div class="q-title">Общий комментарий</div><textarea id="oCom" placeholder="Впечатление, произношение, что важно учесть в программе">${esc(o.comment||'')}</textarea></div>
+  <div class="send-status" id="oStatus"></div>
+ </div>
+ <div class="nav"><button class="btn ghost" id="back">← ${hasTest?'К результатам':'На главную'}</button><button class="btn indigo" id="send">${hasTest?'Отправить полный отчёт':'Отправить устную часть'} в Telegram</button></div>`;
+ $('#oName').oninput=e=>{o.name=e.target.value;save()};
+ $('#oCom').oninput=e=>{o.comment=e.target.value;save()};
+ app.querySelectorAll('[data-on]').forEach(el=>el.oninput=()=>{o.notes[el.dataset.on]=el.value;save()});
+ app.querySelectorAll('[data-or]').forEach(el=>el.onclick=()=>{const i=el.dataset.or,v=+el.dataset.v;o.rates[i]=o.rates[i]===v?null:v;if(o.rates[i]==null)delete o.rates[i];save();app.querySelectorAll(`[data-or="${i}"]`).forEach(d=>d.classList.toggle('sel',+d.dataset.v===o.rates[i]))});
+ app.querySelectorAll('[data-cr]').forEach(el=>el.onclick=()=>{o.crit[el.dataset.cr]=+el.dataset.v;save();app.querySelectorAll(`[data-cr="${el.dataset.cr}"]`).forEach(d=>d.classList.toggle('sel',d===el))});
+ app.querySelectorAll('[data-show]').forEach(el=>el.onclick=()=>{const c=ORAL[+el.dataset.show];const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="kicker" style="color:#F3D9CC">${c.lvl} · Situación</div><h2>${esc(c.t)}</h2><p>${esc(c.task)}</p><button class="btn">Закрыть</button>`;ov.querySelector('button').onclick=()=>ov.remove();document.body.appendChild(ov)});
+ $('#back').onclick=()=>go(hasTest?'results':'intro');
+ $('#send').onclick=async()=>{
+  const box=$('#oStatus');box.textContent='Отправляю…';
+  let text;
+  if(hasTest)text=buildReport();
+  else{const b=buildOralBlock();if(!b){box.textContent='Сначала оцените хотя бы одну карточку.';return}text=['🎤 УСТНАЯ ЧАСТЬ · EspañolPro',`Ученик: ${o.name||'—'}`,`Дата: ${new Date().toLocaleString('ru-RU')}`,'',...b].join('\n')}
+  try{await tgSend(text);box.innerHTML='<span style="color:var(--ok)">✓ Отправлено</span>'}catch(e){box.innerHTML='<span style="color:var(--bad)">Не удалось отправить. Скопируйте отчёт на странице результатов.</span>'}
+ };
+}
+
+/* ================== СТАРТ ================== */
+(function init(){
+ const saved=loadSaved();
+ if(/[?&]teacher/.test(location.search)){if(saved)S=Object.assign(fresh(),saved);S.screen='oral';render();return}
+ render();
+})();
+</script>
+</body>
+</html>
