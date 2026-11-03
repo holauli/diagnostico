@@ -224,7 +224,7 @@ const PASSAGES={
  a2r:{type:'read',title:'Сообщение от хозяйки квартиры',text:'¡Hola! Te escribo para darte información sobre el apartamento. Las llaves están en una caja junto a la puerta; el código es 4721. El wifi se llama «CasaLuna» y la contraseña está en la nevera. Por favor, no dejes la basura en el balcón: los contenedores están al final de la calle. El domingo tienes que dejar el apartamento antes de las 11. ¡Que disfrutes de Sevilla!<br><i>Lucía</i>'},
  a2l:{type:'listen',rate:.9,text:'Atención, por favor. El tren con destino a Barcelona, que tenía que salir a las diez y cuarto, sale con veinte minutos de retraso. Saldrá por la vía cuatro. Disculpen las molestias.'},
  b1r:{type:'read',title:'Статья',text:'Cada vez más vecinos de ciudades como Barcelona o Palma se quejan del turismo masivo. Según ellos, el precio del alquiler ha subido tanto que muchos jóvenes ya no pueden vivir en su propio barrio. Sin embargo, otros recuerdan que el turismo da trabajo a miles de personas. Por eso, algunos ayuntamientos han decidido limitar los pisos turísticos en lugar de reducir el número de visitantes.'},
- b1l:{type:'listen',rate:.97,text:'Hola, soy Javier, de la agencia de viajes. Te llamo porque ha habido un cambio en tu vuelo del jueves: en lugar de salir a las nueve de la mañana, saldrá a las doce y media. Si este horario no te viene bien, podemos cambiarte al vuelo del viernes sin coste adicional. Llámame antes del miércoles, por favor. ¡Gracias!'}
+ b1l:{type:'listen',rate:.97,text:'Hola, soy Laura, de la agencia de viajes. Te llamo porque ha habido un cambio en tu vuelo del jueves: en lugar de salir a las nueve de la mañana, saldrá a las doce y media. Si este horario no te viene bien, podemos cambiarte al vuelo del viernes sin coste adicional. Llámame antes del miércoles, por favor. ¡Gracias!'}
 };
 // В каждом задании первый вариант (o[0]) — правильный; варианты перемешиваются при показе.
 const BANK={
@@ -471,13 +471,9 @@ function rSelf(){
 }
 
 /* ---------- Тест ---------- */
-let voices=[];
-function loadVoices(){try{voices=speechSynthesis.getVoices()}catch(e){voices=[]}}
-if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
-function esVoice(){return voices.find(v=>/^es[-_]ES/i.test(v.lang))||voices.find(v=>/^es/i.test(v.lang))}
-function speak(text,rate,onend){
- try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=esVoice();if(v)u.voice=v;u.lang=v?v.lang:'es-ES';u.rate=rate||.9;u.onend=onend;u.onerror=onend;speechSynthesis.speak(u)}catch(e){onend&&onend()}
-}
+let player=null;
+function stopAudio(){if(player){player.pause();player=null}}
+function playPassage(id,onend){stopAudio();player=new Audio('audio/'+id+'.mp3');player.onended=onend;player.onerror=()=>{toast('Не удалось загрузить аудио. Проверьте интернет');onend()};player.play().catch(()=>{toast('Не удалось воспроизвести аудио');onend()})}
 let pendingAnswer=null;
 function curItem(){return BANK[LEVELS[S.test.stage]][S.test.idx]}
 function rTest(){
@@ -493,8 +489,8 @@ function rTest(){
  let ctx='';
  if(it.p){const P=PASSAGES[it.p];
   if(P.type==='read')ctx=`<div class="passage"><div class="pt">${esc(P.title)}</div>${P.text}</div>`;
-  else{const left=2-(S.test.plays[it.p]||0);const ok='speechSynthesis' in window;
-   ctx=`<div class="audio"><button class="play" id="play" ${left<=0||!ok?'disabled':''} aria-label="Слушать">▶</button><div><b>Прослушайте запись</b><div class="small">${ok?`Можно прослушать ещё ${left} раз(а)`:'Ваш браузер не умеет озвучивать текст. Откройте тест в Chrome или Safari, либо нажмите «Не знаю».'}</div>${ok&&!esVoice()?'<div class="small muted">Испанский голос не найден, озвучка может звучать с акцентом.</div>':''}</div></div>`}
+  else{const left=2-(S.test.plays[it.p]||0);
+   ctx=`<div class="audio"><button class="play" id="play" ${left<=0?'disabled':''} aria-label="Слушать">▶</button><div><b>Прослушайте запись</b><div class="small">${left>0?`Можно прослушать ещё ${left} раз(а)`:'Прослушивания закончились'}</div></div></div>`}
  }
  const isSpanishQ=it.skill==='gram'||(it.skill==='vocab'&&!/[а-я]/i.test(it.q));
  app.innerHTML=`<div class="card">
@@ -509,10 +505,10 @@ function rTest(){
  app.querySelectorAll('[data-ans]').forEach(el=>el.onclick=()=>{pendingAnswer=el.dataset.ans==='nose'?'nose':+el.dataset.ans;app.querySelectorAll('[data-ans]').forEach(d=>d.classList.toggle('sel',d===el));$('#next').disabled=false});
  const pl=$('#play');
  if(pl)pl.onclick=()=>{const P=PASSAGES[it.p];S.test.plays[it.p]=(S.test.plays[it.p]||0)+1;save();pl.disabled=true;pl.textContent='♪';
-  speak(P.text,P.rate,()=>{const y=window.scrollY;rTest();window.scrollTo(0,y)})};
+  playPassage(it.p,()=>{player=null;const y=window.scrollY;rTest();window.scrollTo(0,y)})};
  $('#next').onclick=()=>{
   if(pendingAnswer==null)return;
-  try{speechSynthesis.cancel()}catch(e){}
+  stopAudio();
   S.test.res[it.id]={choice:pendingAnswer,ok:pendingAnswer===0,lvl,skill:it.skill};
   if(S.test.idx<items.length-1){S.test.idx++;save();rTest();window.scrollTo({top:0,behavior:'smooth'})}
   else{const r=stageStats(lvl);
@@ -807,7 +803,7 @@ function rOral(){
 }
 
 /* ================== СТАРТ ================== */
-document.getElementById('home').onclick=()=>{try{speechSynthesis.cancel()}catch(e){}if(S.screen==='home')return;if(FLOW.includes(S.screen)){S.resume=S.screen;save()}S.screen='home';render();window.scrollTo(0,0)};
+document.getElementById('home').onclick=()=>{stopAudio();if(S.screen==='home')return;if(FLOW.includes(S.screen)){S.resume=S.screen;save()}S.screen='home';render();window.scrollTo(0,0)};
 (function init(){
  const saved=loadSaved();
  if(/[?&]teacher/.test(location.search)){withSaved();S.screen='teacher';render();return}
